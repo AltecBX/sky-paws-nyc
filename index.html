@@ -515,12 +515,12 @@ const Audio = {
       osc.type = 'sine'; osc.connect(gain); gain.connect(ac.destination);
       const st = t + i * noteLen * 0.55;
       osc.frequency.setValueAtTime(f, st);
-      gain.gain.setValueAtTime(0.12 * this._master(), st);
+      gain.gain.setValueAtTime(0.06 * this._master(), st);
       gain.gain.exponentialRampToValueAtTime(0.001, st + noteLen);
       osc.start(st); osc.stop(st + noteLen + 0.05);
     });
   },
-  _master() { return typeof Save !== 'undefined' && Save.data ? (Save.data.settings.sfx ? 0.2 : 0) : 0.2; },
+  _master() { return typeof Save !== 'undefined' && Save.data ? (Save.data.settings.sfx ? 0.07 : 0) : 0.07; },
 
   // --- BACKGROUND MUSIC ---
   _melodies: {
@@ -555,7 +555,7 @@ const Audio = {
     bassOsc.frequency.setValueAtTime(bassRoot, ac.currentTime);
     bassOsc.connect(bassGain);
     bassGain.connect(ac.destination);
-    bassGain.gain.setValueAtTime(0.015, ac.currentTime);
+    bassGain.gain.setValueAtTime(0.005, ac.currentTime);
     bassOsc.start();
     this._musicNodes.push(bassOsc, bassGain);
 
@@ -573,7 +573,7 @@ const Audio = {
       osc.frequency.setValueAtTime(freq, t);
       osc.connect(gain);
       gain.connect(ac2.destination);
-      gain.gain.setValueAtTime(0.025, t);
+      gain.gain.setValueAtTime(0.008, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.48);
       osc.start(t);
       osc.stop(t + 0.5);
@@ -585,7 +585,7 @@ const Audio = {
       osc2.frequency.setValueAtTime(freq * 1.5, t);
       osc2.connect(gain2);
       gain2.connect(ac2.destination);
-      gain2.gain.setValueAtTime(0.012, t);
+      gain2.gain.setValueAtTime(0.004, t);
       gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
       osc2.start(t);
       osc2.stop(t + 0.48);
@@ -641,32 +641,32 @@ const Audio = {
       case 'zoo':
         flt.frequency.value = 800;
         flt.Q.value = 0.5;
-        gain.gain.setValueAtTime(0.012, ac.currentTime);
+        gain.gain.setValueAtTime(0.004, ac.currentTime);
         break;
       case 'river':
         flt.frequency.value = 400;
         flt.Q.value = 0.5;
-        gain.gain.setValueAtTime(0.018, ac.currentTime);
+        gain.gain.setValueAtTime(0.006, ac.currentTime);
         break;
       case 'subway':
         flt.frequency.value = 200;
         flt.Q.value = 0.5;
-        gain.gain.setValueAtTime(0.012, ac.currentTime);
+        gain.gain.setValueAtTime(0.004, ac.currentTime);
         break;
       case 'museum':
         flt.frequency.value = 1200;
         flt.Q.value = 0.5;
-        gain.gain.setValueAtTime(0.006, ac.currentTime);
+        gain.gain.setValueAtTime(0.002, ac.currentTime);
         break;
       case 'grandcentral':
         flt.frequency.value = 600;
         flt.Q.value = 0.4;
-        gain.gain.setValueAtTime(0.015, ac.currentTime);
+        gain.gain.setValueAtTime(0.005, ac.currentTime);
         break;
       default:
         flt.frequency.value = 800;
         flt.Q.value = 0.5;
-        gain.gain.setValueAtTime(0.012, ac.currentTime);
+        gain.gain.setValueAtTime(0.004, ac.currentTime);
     }
 
     src.connect(flt);
