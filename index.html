@@ -13691,7 +13691,7 @@ const GrandFinale = {
         // Auto-advance after text complete + pause, OR on click
         if (this.dialogueCharIdx >= this.currentDialogue.text.length) {
           this.dialogueTimer++;
-          if (this.dialogueTimer > 180 || this.clickAdvance) {
+          if (this.dialogueTimer > 420 || this.clickAdvance) {
             this.clickAdvance = false;
             this.advanceDialogue();
           }
