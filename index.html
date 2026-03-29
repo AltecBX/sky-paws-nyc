@@ -205,7 +205,8 @@ canvas{display:block;position:absolute;top:0;left:0;width:100%;height:100%}
 <!-- Magic Stage (Secret Level) -->
 <div class="screen" id="magicStage" style="pointer-events:auto">
 <div id="magicTitle" style="position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:5;color:#ffd54f;font-size:clamp(1rem,2.5vw,1.6rem);font-weight:900;text-shadow:0 0 20px rgba(255,180,0,0.5);letter-spacing:3px;text-align:center">✨ THOMAS THE MAGNIFICENT ✨</div>
-<div id="magicMenu" style="position:absolute;bottom:15px;left:50%;transform:translateX(-50%);display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:700px;z-index:5"></div>
+<div id="magicMenuLeft" style="position:absolute;left:6px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:6px;z-index:5"></div>
+<div id="magicMenuRight" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:6px;z-index:5"></div>
 <div id="magicNarration" style="display:none;position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:min(90%,600px);background:rgba(10,5,30,0.92);backdrop-filter:blur(12px);border:2px solid rgba(255,200,100,0.35);border-radius:18px;padding:16px 22px;z-index:6;box-shadow:0 8px 40px rgba(0,0,0,0.5)">
 <div id="magicSpeaker" style="font-size:0.75rem;font-weight:800;color:#ffd54f;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">THOMAS</div>
 <div id="magicText" style="font-size:0.95rem;color:rgba(255,255,255,0.92);line-height:1.5"></div>
@@ -9783,12 +9784,14 @@ const MagicStage = {
     this.showingMenu = true;
     this.buildMenu();
     document.getElementById('magicNarration').style.display = 'none';
-    document.getElementById('magicMenu').style.display = 'flex';
+    document.getElementById('magicMenuLeft').style.display = 'flex'; document.getElementById('magicMenuRight').style.display = 'flex';
   },
 
   buildMenu() {
-    const menuDiv = document.getElementById('magicMenu');
-    menuDiv.innerHTML = '';
+    const leftDiv = document.getElementById('magicMenuLeft');
+    const rightDiv = document.getElementById('magicMenuRight');
+    leftDiv.innerHTML = '';
+    rightDiv.innerHTML = '';
     const trickList = [
       { id: 'cards', icon: '\uD83C\uDCCF', name: 'Pick a Card' },
       { id: 'rabbit', icon: '\uD83D\uDC30', name: 'Rabbit from Hat' },
@@ -9803,12 +9806,12 @@ const MagicStage = {
       { id: 'fire', icon: '\uD83D\uDD25', name: 'Fire Burst' },
       { id: 'finale', icon: '\uD83C\uDF1F', name: 'Grand Finale' }
     ];
-    trickList.forEach(tr => {
+    trickList.forEach((tr, i) => {
       const btn = document.createElement('div');
       btn.className = 'magic-btn';
       btn.innerHTML = `<span class="trick-icon">${tr.icon}</span>${tr.name}`;
       btn.onclick = () => this.selectTrick(tr.id);
-      menuDiv.appendChild(btn);
+      (i < 6 ? leftDiv : rightDiv).appendChild(btn);
     });
   },
 
@@ -9820,7 +9823,7 @@ const MagicStage = {
     this.steps = this.getTrickSteps(id);
     this.stepIndex = -1;
     this.showingMenu = false;
-    document.getElementById('magicMenu').style.display = 'none';
+    document.getElementById('magicMenuLeft').style.display = 'none'; document.getElementById('magicMenuRight').style.display = 'none';
     document.getElementById('magicNarration').style.display = 'block';
     this.advanceStep();
   },
@@ -9851,7 +9854,7 @@ const MagicStage = {
     this.thomasState = 'idle';
     this.showingMenu = true;
     document.getElementById('magicNarration').style.display = 'none';
-    document.getElementById('magicMenu').style.display = 'flex';
+    document.getElementById('magicMenuLeft').style.display = 'flex'; document.getElementById('magicMenuRight').style.display = 'flex';
   },
 
   handleClick(canvasX, canvasY) {
