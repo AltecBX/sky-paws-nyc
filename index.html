@@ -13680,16 +13680,16 @@ const GrandFinale = {
     } else if (this.phase === 2 || this.phase === 3 || this.phase === 4) {
       // Dialogue phase -- type text
       if (this.currentDialogue) {
-        this.dialogueTimer++;
         if (this.dialogueCharIdx < this.currentDialogue.text.length) {
-          // Type 2 chars per frame
+          // Still typing — type 2 chars per frame
           for (let i = 0; i < 2 && this.dialogueCharIdx < this.currentDialogue.text.length; i++) {
             this.dialogueDisplayText += this.currentDialogue.text[this.dialogueCharIdx];
             this.dialogueCharIdx++;
           }
-        }
-        // Auto-advance after text complete + pause, OR on click
-        if (this.dialogueCharIdx >= this.currentDialogue.text.length) {
+          // Reset wait timer while still typing
+          this.dialogueTimer = 0;
+        } else {
+          // Text fully displayed — count wait timer, then auto-advance
           this.dialogueTimer++;
           if (this.dialogueTimer > 420 || this.clickAdvance) {
             this.clickAdvance = false;
@@ -14682,6 +14682,8 @@ const Game = {
     document.getElementById('hud').style.display = 'none';
     document.getElementById('progressBar').style.display = 'none';
     document.getElementById('touchControls').style.display = 'none';
+    document.getElementById('dialogue').style.display = 'none';
+    Dialogue.hide();
     GrandFinale.init();
   },
 
