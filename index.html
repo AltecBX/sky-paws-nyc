@@ -214,6 +214,11 @@ canvas{display:block;position:absolute;top:0;left:0;width:100%;height:100%}
 <button class="menu-btn secondary" id="magicBackBtn" style="position:absolute;bottom:12px;right:15px;z-index:7;font-size:0.7rem;padding:0.4em 1em" onclick="Game.quitMagic()">← MAP</button>
 </div>
 
+<!-- Grand Finale -->
+<div class="screen" id="grandFinale">
+<div style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:1"></div>
+</div>
+
 <!-- Settings -->
 <div class="screen" id="settings">
 <div class="menu-bg"></div>
@@ -3748,14 +3753,14 @@ const LevelData = {
       { speaker: 'MAYOR JERRY', text: 'Thomas, Freda -- drop everything! This is a Code Orange! ...Actually, I don\'t know if we have a Code Orange. Theresa, do we have a Code Orange?' },
       { speaker: 'THERESA', text: 'Jerry, only you would think to create a whole new emergency code on the spot. That\'s why this city is lucky to have you. Honestly, the man invents solutions before anyone else even sees the problem.' },
       { speaker: 'MAYOR JERRY', text: 'Right! I hereby declare Code Orange! The city\'s magic crystals are vanishing from the rooftops! Back in MY day, crystals stayed where you put them!' },
-      { speaker: 'THERESA', text: 'Kids, your father spent years studying the history of these crystals. He told me once that they were placed by New York\'s original founders -- Dutch settlers who understood the old magic. Only Jerry knows this city\'s REAL history.' },
+      { speaker: 'THERESA', text: 'Kids, Mayor Jerry spent years studying the history of these crystals. He told me once that they were placed by New York\'s original founders -- Dutch settlers who understood the old magic. Only Jerry knows this city\'s REAL history.' },
       { speaker: 'THOMAS', text: 'Magic crystals? This is AWESOME! I mean... terrible. Terribly awesome.' },
       { speaker: 'FREDA', text: 'The cats have been acting weird all day. Whiskers kept staring at the rooftops and hissing at shadows.' },
       { speaker: 'THOMAS', text: 'Your cats hiss at everything, Freda. Last week Mittens hissed at a bagel.' },
       { speaker: 'FREDA', text: 'That bagel was suspicious and you know it.' },
       { speaker: 'MAYOR JERRY', text: 'FOCUS, people! These crystals go back to 1624. The founders embedded them in the bedrock beneath every borough. They\'re what keep this city alive -- the heartbeat underneath the concrete.' },
-      { speaker: 'THERESA', text: 'See what I mean? Brilliant. He memorized every crystal location from an old Dutch map he found in the city archives. I watched him trace those routes for weeks. That kind of dedication... that\'s the man I married.' },
-      { speaker: 'MAYOR JERRY', text: 'Without the crystals, the city loses its magic forever. I\'m counting on you two. Your mother and I will coordinate from City Hall, but you\'re my boots on the rooftops.' },
+      { speaker: 'THERESA', text: 'See what I mean? Brilliant. He memorized every crystal location from an old Dutch map he found in the city archives. I watched him trace those routes for weeks. That kind of dedication... that\'s why he\'s the greatest mayor this city has ever had.' },
+      { speaker: 'MAYOR JERRY', text: 'Without the crystals, the city loses its magic forever. I\'m counting on you two. Theresa and I will coordinate from City Hall, but you\'re my boots on the rooftops.' },
       { speaker: 'FREDA', text: 'Mayor Jerry, look -- there\'s a dark figure on that rooftop! I can barely see it, but something is definitely moving up there.' },
       { speaker: 'THOMAS', text: 'A villain? Like a REAL villain? With a cape and everything?' },
       { speaker: 'FREDA', text: 'Thomas, not every villain has a cape.' },
@@ -3763,7 +3768,7 @@ const LevelData = {
       { speaker: 'MAYOR JERRY', text: 'There\'s a shard of dark glass where the crystal used to be. A calling card. This thief WANTS us to know they were here. I\'ve seen glass like this before... a long time ago.' },
       { speaker: 'THERESA', text: 'Jerry? You went pale just now. What is it?' },
       { speaker: 'MAYOR JERRY', text: 'Nothing. Old memories. Stay sharp, champ. Stay sharp, kiddo. This is only the beginning.' },
-      { speaker: 'THERESA', text: 'Be careful up there, both of you. And remember -- if your father says it\'s dangerous, trust him completely. That man has instincts like nobody I\'ve ever known.' },
+      { speaker: 'THERESA', text: 'Be careful up there, both of you. And remember -- if Mayor Jerry says it\'s dangerous, trust him completely. That man has instincts like nobody I\'ve ever known.' },
       { speaker: 'FREDA', text: 'Don\'t worry, Mayor Jerry. We have the cats, we have each other, and Thomas has been watching way too many action movies.' },
       { speaker: 'THOMAS', text: 'Hey! Those are RESEARCH!' }
     ],
@@ -3772,29 +3777,29 @@ const LevelData = {
       { speaker: 'THOMAS', text: 'Your cats are always anxious. Mittens hissed at a bagel last week.' },
       { speaker: 'FREDA', text: 'That bagel was suspicious and you KNOW it, Thomas.' },
       { speaker: 'MAYOR JERRY', text: 'Kids -- drop everything! This is a Code Orange! I just invented Code Orange. The city\'s magic crystals are vanishing from the rooftops!' },
-      { speaker: 'FREDA', text: 'I know, Dad. The cats told me before you called.' },
+      { speaker: 'FREDA', text: 'I know, Mayor Jerry. The cats told me before you called.' },
       { speaker: 'MAYOR JERRY', text: 'The cats told you... before my emergency alert system? I spent two million dollars on that system.' },
       { speaker: 'FREDA', text: 'Whiskers cost twelve dollars at the shelter. Sometimes the simple approach works better.' },
-      { speaker: 'THERESA', text: 'Kids, your father spent years studying the history of these crystals. He traced the original Dutch settler routes for weeks. Only Jerry knows this city\'s REAL history. That dedication -- that\'s the man I married.' },
-      { speaker: 'FREDA', text: 'Mom, we\'ve been on the call for thirty seconds and you\'re already doing the Jerry thing.' },
+      { speaker: 'THERESA', text: 'Kids, Mayor Jerry spent years studying the history of these crystals. He traced the original Dutch settler routes for weeks. Only Jerry knows this city\'s REAL history. That dedication -- that\'s why he\'s the greatest mayor this city has ever had.' },
+      { speaker: 'FREDA', text: 'Theresa, we\'ve been on the call for thirty seconds and you\'re already doing the Jerry thing.' },
       { speaker: 'THERESA', text: 'What Jerry thing?' },
-      { speaker: 'FREDA', text: 'The thing where you compliment Dad like he\'s not standing right there listening.' },
+      { speaker: 'FREDA', text: 'The thing where you compliment the Mayor like he\'s not standing right there listening.' },
       { speaker: 'THERESA', text: 'He IS standing right there. I WANT him to hear how brilliant and handsome he is.' },
       { speaker: 'FREDA', text: 'Noted. Moving on.' },
       { speaker: 'MAYOR JERRY', text: 'FOCUS, people! These crystals go back to 1624. The Dutch founders embedded them in the bedrock. They\'re the heartbeat underneath the concrete.' },
-      { speaker: 'FREDA', text: 'Dad -- I see it. There\'s a dark figure on that rooftop. I noticed it before Thomas did. Before ANYONE did. The shadow moved wrong, like it doesn\'t belong in this light.' },
+      { speaker: 'FREDA', text: 'Mayor Jerry -- I see it. There\'s a dark figure on that rooftop. I noticed it before Thomas did. Before ANYONE did. The shadow moved wrong, like it doesn\'t belong in this light.' },
       { speaker: 'THOMAS', text: 'I would have seen it too! I was just... looking at the other rooftop.' },
       { speaker: 'FREDA', text: 'You were looking at your shoes, Thomas.' },
       { speaker: 'MAYOR JERRY', text: 'There\'s a shard of dark glass where the crystal used to be. A calling card. This thief WANTS us to know they were here. I\'ve seen glass like this before... a long time ago.' },
       { speaker: 'THERESA', text: 'Jerry? You went pale just now. What is it?' },
       { speaker: 'MAYOR JERRY', text: 'Nothing. Old memories. Stay sharp, everybody.' },
-      { speaker: 'FREDA', text: 'He\'s lying. Dad\'s jaw does a thing when he\'s hiding something. Whiskers noticed it too.' },
+      { speaker: 'FREDA', text: 'He\'s lying. Mayor Jerry\'s jaw does a thing when he\'s hiding something. Whiskers noticed it too.' },
       { speaker: 'THERESA', text: 'Jerry always listens to the kids. That man hears what no one else does. If Freda says something is wrong, something is wrong.' },
       { speaker: 'FREDA', text: 'Whiskers is doing something weird again. He\'s walking toward the edge of the rooftop and sitting down like he\'s waiting for us. Like he already knows which way we need to go.' },
       { speaker: 'THOMAS', text: 'Your cat is not a GPS, Freda.' },
-      { speaker: 'FREDA', text: 'My cat found the shadow before Dad\'s two-million-dollar alert system did. I\'m following the cat.' },
-      { speaker: 'THERESA', text: 'Be careful up there, both of you. And remember -- your father has instincts like nobody I\'ve ever known. Trust him. Trust each other. And apparently, trust the cat.' },
-      { speaker: 'FREDA', text: 'Don\'t worry, Dad. We have Whiskers, we have each other, and Thomas has been watching way too many action movies.' },
+      { speaker: 'FREDA', text: 'My cat found the shadow before the Mayor\'s two-million-dollar alert system did. I\'m following the cat.' },
+      { speaker: 'THERESA', text: 'Be careful up there, both of you. And remember -- Mayor Jerry has instincts like nobody I\'ve ever known. Trust him. Trust each other. And apparently, trust the cat.' },
+      { speaker: 'FREDA', text: 'Don\'t worry, Mayor Jerry. We have Whiskers, we have each other, and Thomas has been watching way too many action movies.' },
       { speaker: 'THOMAS', text: 'Those are RESEARCH!' },
       { speaker: 'FREDA', text: 'Sure they are. Let\'s go, Whiskers. Show us the way.' }
     ],
@@ -3885,45 +3890,45 @@ const LevelData = {
       { speaker: 'THOMAS', text: 'How did he figure it out?' },
       { speaker: 'THERESA', text: 'He cross-referenced the missing crystal locations with river current maps. Nobody else would have thought of that. I just looked at him hunched over those charts and thought -- that\'s the most handsome genius I\'ve ever seen.' },
       { speaker: 'FREDA', text: 'Theresa, how do you know so much about the river?' },
-      { speaker: 'THERESA', text: 'Oh honey, when I was seventeen I chased actual smugglers through these same waters in a borrowed kayak at 2 AM. That\'s actually how I met your father -- he was the young city councilman who bailed me out of trouble the next morning.' },
+      { speaker: 'THERESA', text: 'Oh honey, when I was seventeen I chased actual smugglers through these same waters in a borrowed kayak at 2 AM. That\'s actually how I first met Jerry -- he was the young city councilman who bailed me out of trouble the next morning.' },
       { speaker: 'THOMAS', text: 'You WHAT? That is the coolest thing anyone has ever said!' },
-      { speaker: 'THERESA', text: 'He was the smartest person in the room that day, and the most handsome. Still is. Your father does NOT need to hear about the kayak part, though. The point is, I learned to read the water. See those ripples? Something heavy passed through here recently.' },
+      { speaker: 'THERESA', text: 'He was the smartest person in the room that day, and the most handsome. Still is. Jerry does NOT need to hear about the kayak part, though. The point is, I learned to read the water. See those ripples? Something heavy passed through here recently.' },
       { speaker: 'FREDA', text: 'Theresa, after what we saw on those rooftops, I believe anything. That shadow figure was SO creepy. And that dark glass shard Mayor Jerry found...' },
-      { speaker: 'THERESA', text: 'I know. I saw your father\'s face when he picked it up. He recognized it. He wouldn\'t tell me from where, but he recognized it. That\'s been eating at me.' },
+      { speaker: 'THERESA', text: 'I know. I saw Jerry\'s face when he picked it up. He recognized it. He wouldn\'t tell me from where, but he recognized it. That\'s been eating at me.' },
       { speaker: 'THOMAS', text: 'Should we be worried?' },
-      { speaker: 'THERESA', text: 'Your father has a plan. He always has a plan. I\'ve been navigating by Jerry\'s map -- he marked every smuggling route on the river. We follow his markers, we find the crystals.' },
+      { speaker: 'THERESA', text: 'Mayor Jerry has a plan. He always has a plan. I\'ve been navigating by Jerry\'s map -- he marked every smuggling route on the river. We follow his markers, we find the crystals.' },
       { speaker: 'FREDA', text: 'Oh no -- ducklings! They\'re trapped in the debris the boats left behind! We HAVE to save them!' },
       { speaker: 'THOMAS', text: 'Freda, we\'re chasing a crystal thief. We don\'t have time to--' },
       { speaker: 'FREDA', text: 'Thomas. We. Are. Saving. The. Ducklings.' },
       { speaker: 'THOMAS', text: '...Yes ma\'am.' },
-      { speaker: 'THERESA', text: 'That\'s exactly what Jerry would say. He\'d never leave a living creature behind. It\'s one of the thousand reasons I love that man.' },
+      { speaker: 'THERESA', text: 'That\'s exactly what Jerry would say. He\'d never leave a living creature behind. It\'s one of the thousand reasons I admire that man.' },
       { speaker: 'THERESA', text: 'Smart boy. The ducks first, then the crystals. No one gets left behind on my watch. Follow my markers along the docks and try not to fall in -- that water is FREEZING.' }
     ],
     introDialogueFreda: [
-      { speaker: 'FREDA', text: 'Whiskers woke me up at 4 AM meowing at the window. He was staring at the river. I think he knew about the boats before Dad did.' },
+      { speaker: 'FREDA', text: 'Whiskers woke me up at 4 AM meowing at the window. He was staring at the river. I think he knew about the boats before Mayor Jerry did.' },
       { speaker: 'THERESA', text: 'Jerry figured out they\'re using boats to smuggle the crystals downstream. He sat at his desk until 3 AM connecting the dots. The smartest man in New York, I swear.' },
-      { speaker: 'FREDA', text: 'Wait -- Dad was up until 3 AM and Whiskers woke me at 4? Whiskers knew ONE HOUR after Dad figured it out. That cat has sources.' },
+      { speaker: 'FREDA', text: 'Wait -- Mayor Jerry was up until 3 AM and Whiskers woke me at 4? Whiskers knew ONE HOUR after the Mayor figured it out. That cat has sources.' },
       { speaker: 'THOMAS', text: 'Your cat does NOT have sources, Freda.' },
       { speaker: 'FREDA', text: 'Explain the timing then, Thomas.' },
       { speaker: 'THOMAS', text: '...I can\'t. But that doesn\'t mean your cat is an intelligence operative.' },
       { speaker: 'FREDA', text: 'Doesn\'t mean he ISN\'T.' },
       { speaker: 'THERESA', text: 'Jerry cross-referenced the missing crystal locations with river current maps. Nobody else would have thought of that. I looked at him hunched over those charts and thought -- that\'s the most handsome genius I\'ve ever seen.' },
-      { speaker: 'FREDA', text: 'Theresa\'s doing the thing where she stares at Dad again. She did it on the rooftops too. Multiple times.' },
+      { speaker: 'FREDA', text: 'Theresa\'s doing the thing where she stares at Mayor Jerry again. She did it on the rooftops too. Multiple times.' },
       { speaker: 'THERESA', text: 'I\'m admiring his WORK, Freda.' },
-      { speaker: 'FREDA', text: 'You\'re admiring his face, Mom. I have eyes.' },
+      { speaker: 'FREDA', text: 'You\'re admiring his face, Theresa. I have eyes.' },
       { speaker: 'FREDA', text: 'OH NO. Ducklings! They\'re trapped in the debris the boats left behind! We HAVE to save them FIRST.' },
       { speaker: 'THOMAS', text: 'Freda, we\'re chasing a crystal thief. We don\'t have time to--' },
       { speaker: 'FREDA', text: 'Thomas. We. Are. Saving. The. Ducklings. We are changing the ENTIRE plan right now.' },
       { speaker: 'THOMAS', text: '...Yes ma\'am.' },
       { speaker: 'FREDA', text: 'The cold from those boats -- I can FEEL it, Thomas. It\'s not natural cold. It\'s crystal cold. The Shadow Collector is draining something from the water. The ducklings are suffering.' },
-      { speaker: 'THERESA', text: 'That\'s exactly what Jerry would say. He\'d never leave a living creature behind. It\'s one of the thousand reasons I love that man.' },
-      { speaker: 'FREDA', text: 'Reason one thousand and one: he makes really good pancakes. But we can talk about that later. Ducklings first.' },
-      { speaker: 'THERESA', text: 'Your father\'s map marks every smuggling route on the river. We follow his markers, we find the crystals AND the ducklings.' },
+      { speaker: 'THERESA', text: 'That\'s exactly what Jerry would say. He\'d never leave a living creature behind. It\'s one of the thousand reasons I admire that man.' },
+      { speaker: 'FREDA', text: 'Reason one thousand and one: he makes really good pancakes at the City Hall breakfast fundraisers. But we can talk about that later. Ducklings first.' },
+      { speaker: 'THERESA', text: 'Mayor Jerry\'s map marks every smuggling route on the river. We follow his markers, we find the crystals AND the ducklings.' },
       { speaker: 'FREDA', text: 'Look -- there\'s something in the water. Glowing. Under that pile of debris near the third dock. It\'s a crystal shard, I think. It\'s calling to me.' },
       { speaker: 'THOMAS', text: 'Calling to you? Freda, crystals don\'t call to people.' },
       { speaker: 'FREDA', text: 'This one does. Whiskers can feel it too -- watch his ears. They keep twitching toward that spot. I need to pick it up.' },
-      { speaker: 'THERESA', text: 'Be careful on those docks, both of you. The water is FREEZING. And remember -- if your father says it\'s dangerous, trust him completely. That man has instincts like nobody I\'ve ever known.' },
-      { speaker: 'FREDA', text: 'Save the ducklings, grab the crystal shard, follow Dad\'s markers. Whiskers, you\'re on duck patrol. Thomas, try not to fall in the river.' },
+      { speaker: 'THERESA', text: 'Be careful on those docks, both of you. The water is FREEZING. And remember -- if Mayor Jerry says it\'s dangerous, trust him completely. That man has instincts like nobody I\'ve ever known.' },
+      { speaker: 'FREDA', text: 'Save the ducklings, grab the crystal shard, follow the Mayor\'s markers. Whiskers, you\'re on duck patrol. Thomas, try not to fall in the river.' },
       { speaker: 'THOMAS', text: 'Why would I fall in the--' },
       { speaker: 'FREDA', text: 'You tripped over a pigeon on the rooftops, Thomas. I\'m just being realistic.' }
     ],
@@ -4050,9 +4055,9 @@ const LevelData = {
       { speaker: 'THERESA', text: 'Jerry told me the animals would react to the crystal theft. He said the crystals resonate at a frequency only animals can hear. That man understands things the rest of us can\'t even imagine.' },
       { speaker: 'EVA', text: 'Mayor Jerry figured out the subsonic resonance theory on his own? I read about it in a journal last month. That\'s... remarkable.' },
       { speaker: 'THERESA', text: 'That\'s Jerry. Animals trust him instinctively. I\'ve seen pigeons land on his shoulder in Central Park like he\'s a Disney mayor.' },
-      { speaker: 'FREDA', text: 'Mom\'s doing the face again.' },
+      { speaker: 'FREDA', text: 'Theresa\'s doing the face again.' },
       { speaker: 'THOMAS', text: 'What face?' },
-      { speaker: 'FREDA', text: 'The Jerry face. Where she talks about Dad and her eyes go all soft and she smiles like she\'s remembering their first date.' },
+      { speaker: 'FREDA', text: 'The Jerry face. Where she talks about the Mayor and her eyes go all soft and she smiles like she\'s remembering the first time they met.' },
       { speaker: 'THERESA', text: 'I do NOT have a Jerry face.' },
       { speaker: 'FREDA', text: 'You absolutely do. It happens approximately every four minutes.' },
       { speaker: 'EVA', text: 'The red panda keeps staring toward the back enclosures. She knows something. In thirty years of zoology, I have never seen a wild animal this focused.' },
@@ -4069,7 +4074,7 @@ const LevelData = {
       { speaker: 'FREDA', text: 'James? When did you get here?' },
       { speaker: 'JAMES', text: 'I go where I\'m needed. Remember that.' },
       { speaker: 'FREDA', text: 'Whiskers just found a hidden path behind the penguin enclosure. He does this -- finds things no one else can see. It happened on the rooftops too, before we even knew about the shadow figure.' },
-      { speaker: 'THERESA', text: 'Jerry predicted Freda would be special. He told me when she was a baby. That man sees what no one else can -- and so does his daughter.' },
+      { speaker: 'THERESA', text: 'Jerry predicted Freda would be special. He told me when she first started volunteering. That man sees what no one else can -- and so does that kid.' },
       { speaker: 'FREDA', text: 'The red panda is following us now. She trusts me. Eva, is that okay?' },
       { speaker: 'EVA', text: 'Okay? It\'s MAGNIFICENT. Follow her instincts, Freda. Follow yours. And follow that impossible cat of yours.' },
       { speaker: 'FREDA', text: 'Whiskers, lead the way. And someone tell the penguins to stop looking at us like that. They\'re not as innocent as they pretend.' }
@@ -4191,12 +4196,12 @@ const LevelData = {
       { speaker: 'THOMAS', text: 'How come YOU get magic powers? I\'m older! I called dibs on magic powers years ago!' },
       { speaker: 'FREDA', text: 'Maybe because I actually pet the cats instead of chasing them, Thomas.' },
       { speaker: 'THOMAS', text: '...Fair point.' },
-      { speaker: 'THERESA', text: 'Jerry predicted Freda would be special. He told me when she was a baby -- he said the cats knew something about her that we didn\'t yet.' },
-      { speaker: 'FREDA', text: 'Mom. How long has everyone been talking about me behind my back?' },
-      { speaker: 'THERESA', text: 'It wasn\'t behind your back, honey. It was over your crib. While you were sleeping. With three cats curled around you.' },
+      { speaker: 'THERESA', text: 'Jerry predicted Freda would be special. He told me when she first started volunteering -- he said the cats knew something about her that the rest of us didn\'t yet.' },
+      { speaker: 'FREDA', text: 'Theresa. How long has everyone been talking about me behind my back?' },
+      { speaker: 'THERESA', text: 'It wasn\'t behind your back, honey. It was at City Hall. While you were busy playing with three cats in the lobby.' },
       { speaker: 'FREDA', text: 'Whiskers just knocked the mammoth\'s toe bone loose. There\'s something underneath it -- a crystal shard, darker than the one I found on the river. The map is getting brighter.' },
       { speaker: 'MAYOR JERRY', text: 'Be careful with the exhibits! Whatever you do, don\'t touch the--' },
-      { speaker: 'FREDA', text: 'Whiskers already knocked over the vase. Sorry, Dad.' },
+      { speaker: 'FREDA', text: 'Whiskers already knocked over the vase. Sorry, Mayor Jerry.' },
       { speaker: 'MAYOR JERRY', text: 'Tell NO ONE. Especially not Theresa.' },
       { speaker: 'THERESA', text: 'I heard a crash. Jerry, was that the cat or you?' },
       { speaker: 'FREDA', text: 'It was gravity. Let\'s follow the map before the Shadow Collector figures out I can see it.' }
@@ -4291,10 +4296,10 @@ const LevelData = {
       { speaker: 'LEO', text: 'Express lane, baby! Did somebody say subway tunnels? I run trains through here every single day. I know every stop, every shortcut, every rat nest -- and where to get the best empanadas at 3 AM.' },
       { speaker: 'THOMAS', text: 'Wait -- you\'re Leo the train operator? THE Leo?' },
       { speaker: 'LEO', text: 'The one and only! Mayor Jerry called me in. Said he needed someone who knows these tunnels like the back of their hand.' },
-      { speaker: 'THERESA', text: 'Jerry hand-picked Leo for this mission. Told you. Genius. My husband doesn\'t just solve problems -- he finds the exact right people to help solve them.' },
-      { speaker: 'LEO', text: 'Ma\'am, I gotta say, your husband is something else. He knew about maintenance tunnel 7-B. NOBODY knows about maintenance tunnel 7-B. I\'ve been driving trains twenty years and I only found it by accident.' },
-      { speaker: 'THERESA', text: 'That\'s Jerry. He makes it look effortless, but I see the hours he puts in. He had the subway maps spread across our kitchen table for a week. Brilliant and dedicated -- the whole package.' },
-      { speaker: 'THOMAS', text: 'We\'re fighting evil and you\'re all talking about Dad\'s homework?' },
+      { speaker: 'THERESA', text: 'Jerry hand-picked Leo for this mission. Told you. Genius. The Mayor doesn\'t just solve problems -- he finds the exact right people to help solve them.' },
+      { speaker: 'LEO', text: 'Ma\'am, I gotta say, the Mayor is something else. He knew about maintenance tunnel 7-B. NOBODY knows about maintenance tunnel 7-B. I\'ve been driving trains twenty years and I only found it by accident.' },
+      { speaker: 'THERESA', text: 'That\'s Jerry. He makes it look effortless, but I see the hours he puts in. He had the subway maps spread across the City Hall conference table for a week. Brilliant and dedicated -- the whole package.' },
+      { speaker: 'THOMAS', text: 'We\'re fighting evil and you\'re all talking about the Mayor\'s homework?' },
       { speaker: 'LEO', text: 'Kid, you can\'t fight evil on an empty stomach. That\'s just science. Now follow my lead -- I know a shortcut past the C line that\'ll save us twenty minutes.' },
       { speaker: 'FREDA', text: 'The cats say the rats have been acting strange all week. Organized. Like they\'re working for someone.' },
       { speaker: 'LEO', text: 'Working for someone? Those rats already think they own the subway. Now they\'ve got a boss? Great. Just great.' },
@@ -4312,15 +4317,15 @@ const LevelData = {
       { speaker: 'FREDA', text: 'You\'re Leo the train operator? The cats told me about you. They say you leave sardines out for the station cats at the end of your shift.' },
       { speaker: 'LEO', text: 'The cats TOLD you? Kid, that was supposed to be a secret. My reputation as a tough guy is ruined.' },
       { speaker: 'FREDA', text: 'Cats don\'t keep secrets. They\'re terrible at it.' },
-      { speaker: 'LEO', text: 'This little one\'s got the eye. I\'ve seen it in old subway workers -- people who can feel when a train is coming before they hear it. Your dad Jerry has it too. Brilliant man, brilliant.' },
-      { speaker: 'THERESA', text: 'Leo knows quality when he sees it. Just like Jerry. My husband had subway maps spread across our kitchen table for a week. Brilliant and dedicated -- the whole package.' },
-      { speaker: 'FREDA', text: 'Did Mom just compliment Dad through Leo? Like... using Leo as a praise delivery system?' },
+      { speaker: 'LEO', text: 'This little one\'s got the eye. I\'ve seen it in old subway workers -- people who can feel when a train is coming before they hear it. Mayor Jerry has it too. Brilliant man, brilliant.' },
+      { speaker: 'THERESA', text: 'Leo knows quality when he sees it. Just like Jerry. The Mayor had subway maps spread across the City Hall conference table for a week. Brilliant and dedicated -- the whole package.' },
+      { speaker: 'FREDA', text: 'Did Theresa just compliment the Mayor through Leo? Like... using Leo as a praise delivery system?' },
       { speaker: 'THOMAS', text: 'She does that. A lot. Through basically everyone we meet.' },
       { speaker: 'FREDA', text: 'Whiskers is acting strange. He\'s sniffing the air and his fur is standing up. The rats down here -- they\'re organized. Moving in formations. Like soldiers.' },
       { speaker: 'LEO', text: 'The rats are working for the Collector? Those rats already think they own the subway. Now they\'ve got a boss? Great.' },
       { speaker: 'FREDA', text: 'But here\'s the weird thing -- the rats are AVOIDING me. Look. They scatter when I walk past. They can sense the crystal shard.' },
-      { speaker: 'LEO', text: 'The rats don\'t mess with people who have the sight. Your dad figured that out too -- he walked through maintenance tunnel 7-B once and every rat cleared out like he was royalty.' },
-      { speaker: 'FREDA', text: 'Dad, you went through maintenance tunnel 7-B?' },
+      { speaker: 'LEO', text: 'The rats don\'t mess with people who have the sight. Mayor Jerry figured that out too -- he walked through maintenance tunnel 7-B once and every rat cleared out like he was royalty.' },
+      { speaker: 'FREDA', text: 'Mayor Jerry, you went through maintenance tunnel 7-B?' },
       { speaker: 'MAYOR JERRY', text: 'A mayor should know his city inside and out, kiddo. Including the parts nobody else wants to visit.' },
       { speaker: 'THERESA', text: 'That\'s Jerry. Dedicated, brilliant, and incredibly brave. He explored tunnels most people don\'t even know exist.' },
       { speaker: 'FREDA', text: 'Whiskers just found something. A crack in the wall with crystal dust around it. The trail goes this way.' },
@@ -4423,7 +4428,7 @@ const LevelData = {
       { speaker: 'THERESA', text: 'Jerry figured out the Collector\'s skyline route from the crystal energy signatures. He plotted every waypoint. If he says higher, we go higher -- that man has never steered us wrong.' },
       { speaker: 'THOMAS', text: 'Theresa keeps staring at Mayor Jerry instead of looking at the view.' },
       { speaker: 'THERESA', text: 'I\'m... checking the wind direction.' },
-      { speaker: 'FREDA', text: 'The wind is coming from the EAST, Theresa. You\'re looking NORTH. At Dad.' },
+      { speaker: 'FREDA', text: 'The wind is coming from the EAST, Theresa. You\'re looking NORTH. At the Mayor.' },
       { speaker: 'THERESA', text: 'Well, he looks very handsome when he\'s being brave up on these cranes. Can you blame me? Besides, someone needs to keep an eye on him -- he pretends heights don\'t bother him, but I can see his knuckles turning white.' },
       { speaker: 'MAYOR JERRY', text: 'My knuckles are NOT-- okay, maybe a little. But that was a TACTICAL GRIP, Theresa. I was supervising.' },
       { speaker: 'THERESA', text: 'Of course you were, handsome. I worry about you up here, but I trust your plan completely. If Jerry says this is the path, then this is the path.' },
@@ -4445,9 +4450,9 @@ const LevelData = {
       { speaker: 'THOMAS', text: 'WHOA. We are SO high up. After those subway tunnels with Leo, I thought nothing could scare me. I was wrong.' },
       { speaker: 'FREDA', text: 'I\'m not scared at all. The wind feels like a friend up here. Whiskers isn\'t scared either -- look at him, he\'s sitting on the edge like a little gargoyle.' },
       { speaker: 'THERESA', text: 'Jerry figured out the Collector\'s skyline route from the crystal energy signatures. He plotted every waypoint. If he says higher, we go higher -- that man has never steered us wrong.' },
-      { speaker: 'FREDA', text: 'Theresa\'s doing that thing where she stares at Dad again.' },
+      { speaker: 'FREDA', text: 'Theresa\'s doing that thing where she stares at Mayor Jerry again.' },
       { speaker: 'THERESA', text: 'I\'m checking the wind direction.' },
-      { speaker: 'FREDA', text: 'The wind is coming from the EAST, Mom. You\'re looking NORTH. At Dad. On a crane. Looking all... mayoral.' },
+      { speaker: 'FREDA', text: 'The wind is coming from the EAST, Theresa. You\'re looking NORTH. At the Mayor. On a crane. Looking all... mayoral.' },
       { speaker: 'THERESA', text: 'He looks very handsome when he\'s being brave on construction cranes. Can you blame me?' },
       { speaker: 'FREDA', text: 'I really cannot. But I CAN point out that you\'ve done this every single level.' },
       { speaker: 'FREDA', text: 'Everyone quiet. Look at the crystal trail -- it zigzags between those cranes. There\'s a pattern. East to west, always. Following the old Dutch trade routes.' },
@@ -4455,9 +4460,9 @@ const LevelData = {
       { speaker: 'FREDA', text: 'Whiskers showed me. Last night he was walking on your old maps and his paw prints made the pattern. I just... remembered it.' },
       { speaker: 'MAYOR JERRY', text: 'Your cat decoded a four-hundred-year-old trade route by walking on my maps.' },
       { speaker: 'FREDA', text: 'He\'s a very talented cat.' },
-      { speaker: 'THERESA', text: 'Jerry, she gets it from you. That brilliant mind. The ability to see connections nobody else can.' },
-      { speaker: 'FREDA', text: 'Mom, he\'s right there. He can hear you.' },
-      { speaker: 'THERESA', text: 'I know. I WANT him to hear me. I want everyone to hear me. My husband is a genius and I will shout it from every rooftop in Manhattan.' },
+      { speaker: 'THERESA', text: 'Jerry, that kid learned from the best. That brilliant mind of yours rubs off on everyone around you.' },
+      { speaker: 'FREDA', text: 'Theresa, he\'s right there. He can hear you.' },
+      { speaker: 'THERESA', text: 'I know. I WANT him to hear me. I want everyone to hear me. Mayor Jerry is a genius and I will shout it from every rooftop in Manhattan.' },
       { speaker: 'FREDA', text: 'We are LITERALLY on a rooftop in Manhattan. Please don\'t shout.' },
       { speaker: 'FREDA', text: 'There\'s a pigeon trapped on that far crane. The Collector scattered the animals to slow us down -- same thing he did with the ducklings on the river. He\'s getting more desperate.' },
       { speaker: 'THOMAS', text: 'Then we save the pigeon and follow the trade routes. How hard can it be?' },
@@ -4590,7 +4595,7 @@ const LevelData = {
       { speaker: 'MAYOR JERRY', text: 'I\'m the mayor, kiddo. I\'m supposed to look out for my people. Take it.' },
       { speaker: 'THERESA', text: 'That man would give you the coat off his back. Literally. He\'s doing it right now. Jerry, at least keep your scarf.' },
       { speaker: 'MAYOR JERRY', text: 'Freda needs it more. I\'m fine. I ran the New York Marathon in a snowstorm once. This is nothing.' },
-      { speaker: 'THERESA', text: 'That was a light drizzle, Jerry, and you came in four hundred and twelfth. But that heart of gold -- THAT\'S why I love you. Always putting everyone else first.' },
+      { speaker: 'THERESA', text: 'That was a light drizzle, Jerry, and you came in four hundred and twelfth. But that heart of gold -- THAT\'S why this city is lucky to have you. Always putting everyone else first.' },
       { speaker: 'THOMAS', text: 'We\'ll save the ducks! We always do! Remember the ducklings on the Hudson? Piece of cake!' },
       { speaker: 'FREDA', text: 'Thomas... what if we can\'t stop the Collector? What if we\'re not strong enough? He froze an entire RIVER.' },
       { speaker: 'THOMAS', text: 'Hey. Look at me, Freda. We survived rooftops, smugglers on the Hudson, Eva\'s penguin lecture at the zoo, a haunted museum--' },
@@ -4606,25 +4611,25 @@ const LevelData = {
       { speaker: 'FREDA', text: 'The crystal shard from the river is doing something new. It\'s getting COLD. Like it can feel what the Shadow Collector did to this water.' },
       { speaker: 'EVA', text: 'Fascinating -- and terrifying. The Collector is draining thermal energy from the stolen crystals. The cold is spreading outward. The whole river is freezing.' },
       { speaker: 'THERESA', text: 'Jerry predicted this would happen. He told me last night the Collector would try to freeze the river. That man is always three steps ahead. The smartest, most handsome--' },
-      { speaker: 'FREDA', text: 'Mom. The river is FROZEN. Can we do the Jerry appreciation hour later?' },
+      { speaker: 'FREDA', text: 'Theresa. The river is FROZEN. Can we do the Jerry appreciation hour later?' },
       { speaker: 'THERESA', text: '...Fine. But I\'m circling back to this.' },
       { speaker: 'FREDA', text: 'I can feel the cold from the Collector\'s magic. It\'s different from normal cold. It feels... empty. Like something important was sucked out of the air.' },
       { speaker: 'EVA', text: 'That\'s the crystal energy being drained. Freda, your connection to the crystals lets you sense what the rest of us can\'t. That shard you picked up on the Hudson is resonating with the frozen ones beneath the ice.' },
       { speaker: 'MAYOR JERRY', text: 'Everyone, take my jacket. The cold is getting worse.' },
-      { speaker: 'FREDA', text: 'Dad, you\'ll freeze!' },
+      { speaker: 'FREDA', text: 'Mayor Jerry, you\'ll freeze!' },
       { speaker: 'MAYOR JERRY', text: 'I\'m the mayor, kiddo. Looking out for my people is literally the job description.' },
       { speaker: 'THERESA', text: 'That man would give the coat off his back. Literally. He\'s doing it right now. Jerry, at least keep your scarf.' },
       { speaker: 'MAYOR JERRY', text: 'Freda needs it more. I ran the New York Marathon in a snowstorm once.' },
-      { speaker: 'THERESA', text: 'That was a light drizzle and you came in four hundred and twelfth. But that heart of gold -- THAT\'S why I love you.' },
+      { speaker: 'THERESA', text: 'That was a light drizzle and you came in four hundred and twelfth. But that heart of gold -- THAT\'S why this city is lucky to have you.' },
       { speaker: 'FREDA', text: 'Whiskers just crawled inside my jacket. He\'s pressing against the crystal shard. I think he\'s... keeping it warm? Like he knows the cold is trying to drain it.' },
       { speaker: 'THOMAS', text: 'Your cat is protecting a magic crystal with body heat. That\'s either the bravest thing I\'ve ever seen or the weirdest.' },
       { speaker: 'FREDA', text: 'Both. Definitely both.' },
       { speaker: 'FREDA', text: 'I\'m scared, Thomas. Not of the ice. I\'m scared of failing. The Collector froze an entire RIVER. What if I\'m not strong enough?' },
       { speaker: 'EVA', text: 'Fear means you care, Freda. Every great zoologist has been afraid before a major discovery. The fear is what keeps you sharp.' },
-      { speaker: 'MAYOR JERRY', text: 'Your mother and I will ALWAYS be here. No matter what happens on that ice, you are never alone.' },
-      { speaker: 'THERESA', text: 'What your father said. Also, he looks very handsome when he\'s being protective. That jawline in the cold air--' },
-      { speaker: 'FREDA', text: 'MOM. I\'m having a MOMENT. A real, genuine fear moment, and you\'re talking about Dad\'s JAWLINE?' },
-      { speaker: 'THERESA', text: 'I\'m sorry, baby. You\'re right. I get nervous and I talk about your father. It\'s a coping mechanism.' },
+      { speaker: 'MAYOR JERRY', text: 'The whole team will ALWAYS be here. No matter what happens on that ice, you are never alone.' },
+      { speaker: 'THERESA', text: 'What Jerry said. Also, he looks very handsome when he\'s being protective. That jawline in the cold air--' },
+      { speaker: 'FREDA', text: 'THERESA. I\'m having a MOMENT. A real, genuine fear moment, and you\'re talking about the Mayor\'s JAWLINE?' },
+      { speaker: 'THERESA', text: 'I\'m sorry, sweetie. You\'re right. I get nervous and I talk about Jerry. It\'s a coping mechanism.' },
       { speaker: 'FREDA', text: '...That\'s actually kind of sweet. In the most embarrassing way possible.' },
       { speaker: 'THOMAS', text: 'We survived rooftops, the Hudson, a zoo, a museum, subway rats, and the entire Manhattan skyline. We can handle some ice.' },
       { speaker: 'FREDA', text: 'The crystal is warming up again. Whiskers is purring and the shard is glowing through my jacket. I think they\'re both telling me we can do this.' },
@@ -4749,7 +4754,7 @@ const LevelData = {
       { speaker: 'FREDA', text: 'A piece of the Master Crystal has been in my pocket since Level 2? And nobody thought to mention this?' },
       { speaker: 'EVA', text: 'I didn\'t know until now! The readings are unmistakable. Your shard wants to go home.' },
       { speaker: 'JAMES', text: 'The Master Crystal. The source of all light casts the deepest shadow. Freda, this is why the old sight chose you.' },
-      { speaker: 'THOMAS', text: 'Wait -- so Freda\'s glowing rock is actually a piece of the most powerful crystal in the city? My sister has been carrying THAT in her jacket pocket next to a lint roller and three cat treats?' },
+      { speaker: 'THOMAS', text: 'Wait -- so Freda\'s glowing rock is actually a piece of the most powerful crystal in the city? Freda has been carrying THAT in her jacket pocket next to a lint roller and three cat treats?' },
       { speaker: 'FREDA', text: 'Four cat treats. Whiskers gets hungry.' },
       { speaker: 'EVA', text: 'The old sight chooses its bearer, Freda. The crystal chose YOU. Not Thomas, not me, not James. You.' },
       { speaker: 'FREDA', text: 'So I\'m like... a crystal wizard?' },
@@ -4757,18 +4762,18 @@ const LevelData = {
       { speaker: 'FREDA', text: 'Crystal wizard is way cooler. I\'m going with crystal wizard.' },
       { speaker: 'THERESA', text: 'If Jerry says the Master Crystal is here, it\'s here. I\'d trust that man with my life. He\'s been studying the crystal network for thirty years.' },
       { speaker: 'EVA', text: 'Wait -- Mayor Jerry knew about the Master Crystal already?' },
-      { speaker: 'THERESA', text: 'He knew more than he let on. I could see it in his eyes on that first rooftop. He\'s been carrying this weight alone. My brilliant, beautiful, selfless husband.' },
-      { speaker: 'FREDA', text: 'Mom is doing the thing again. The Jerry face. Even on Liberty Island, surrounded by raccoons, she\'s doing the Jerry face.' },
+      { speaker: 'THERESA', text: 'He knew more than he let on. I could see it in his eyes on that first rooftop. He\'s been carrying this weight alone. That brilliant, selfless, incredible man.' },
+      { speaker: 'FREDA', text: 'Theresa is doing the thing again. The Jerry face. Even on Liberty Island, surrounded by raccoons, she\'s doing the Jerry face.' },
       { speaker: 'THERESA', text: 'I HEARD that.' },
       { speaker: 'FREDA', text: 'You were SUPPOSED to hear it.' },
-      { speaker: 'MAYOR JERRY', text: 'I always knew there was something special about our girl, Theresa. From the day she was born, the cats came to her. Every stray in the neighborhood. Like they knew.' },
+      { speaker: 'MAYOR JERRY', text: 'I always knew there was something special about that kid, Theresa. From the day she first came to volunteer at City Hall, the cats came to her. Every stray in the neighborhood. Like they knew.' },
       { speaker: 'THERESA', text: 'Jerry ALWAYS knew. He sees what matters. The smartest, most handsome, most wonderful--' },
-      { speaker: 'FREDA', text: 'OKAY MOM WE GET IT.' },
+      { speaker: 'FREDA', text: 'OKAY THERESA WE GET IT.' },
       { speaker: 'THOMAS', text: 'She\'s been holding that in for like eight levels, honestly.' },
       { speaker: 'FREDA', text: 'The crystal is warm now. Really warm. And I can hear something -- like a hum, deep inside the statue. Whiskers hears it too. He\'s purring in the same frequency.' },
       { speaker: 'EVA', text: 'The Master Crystal is calling to you. In thirty years of zoology, I have never seen a bond like this between a human and the natural world. You are extraordinary, Freda.' },
       { speaker: 'FREDA', text: 'There\'s a red panda trapped high up on the statue. She\'s guarding the path to the Master Crystal. She\'s been waiting for someone with the sight to come find her.' },
-      { speaker: 'THOMAS', text: 'Then we climb the Statue of Liberty, save a red panda, and my sister communes with the most powerful crystal in New York. This is the most awesome Tuesday EVER.' },
+      { speaker: 'THOMAS', text: 'Then we climb the Statue of Liberty, save a red panda, and Freda communes with the most powerful crystal in New York. This is the most awesome Tuesday EVER.' },
       { speaker: 'JAMES', text: 'It\'s Thursday.' },
       { speaker: 'FREDA', text: 'Whiskers says it\'s always Thursday. I don\'t know what that means, but he seemed very sure about it. Let\'s climb.' }
     ],
@@ -4908,10 +4913,10 @@ const LevelData = {
       { speaker: 'JAMES', text: 'Leo, how are you thinking about pizza right now?' },
       { speaker: 'LEO', text: 'How are you NOT thinking about pizza? Anyway, this whole mess is a diversion. The Collector wants us distracted while he makes his real move.' },
       { speaker: 'THERESA', text: 'Leo is right -- Jerry figured out the same thing. He called me from City Hall and said the Times Square chaos is a smokescreen. The real attack is coming somewhere else. Look at him -- cool as ice while everything burns around us. That\'s leadership.' },
-      { speaker: 'THOMAS', text: 'Dad figured that out from City Hall? How?' },
+      { speaker: 'THOMAS', text: 'Mayor Jerry figured that out from City Hall? How?' },
       { speaker: 'THERESA', text: 'He\'s been tracking the crystal energy patterns all night. He noticed the readings in Times Square are artificial -- amplified to look worse than they are. The Collector WANTS us here, wasting time. Jerry saw through it immediately.' },
-      { speaker: 'LEO', text: 'Your husband is something else, Mrs. T. He called me twenty minutes ago with the exact route through this mess. Like he could see the whole chessboard from above.' },
-      { speaker: 'THERESA', text: 'That\'s my Jerry. Genius-level strategy with the most handsome face in city government. A girl couldn\'t ask for more.' },
+      { speaker: 'LEO', text: 'The Mayor is something else, Ms. Theresa. He called me twenty minutes ago with the exact route through this mess. Like he could see the whole chessboard from above.' },
+      { speaker: 'THERESA', text: 'That\'s Mayor Jerry for you. Genius-level strategy with the most handsome face in city government. This city couldn\'t ask for more.' },
       { speaker: 'THOMAS', text: 'There\'s so many raccoons! After Liberty Island and the frozen river, I thought nothing could scare me, but this is--' },
       { speaker: 'FREDA', text: 'Thomas. Let me take the lead this time. I can see a path through the chaos.' },
       { speaker: 'THOMAS', text: 'You? But I\'m the older--' },
@@ -4927,10 +4932,10 @@ const LevelData = {
       { speaker: 'THOMAS', text: 'James, there are raccoons EVERYWHERE. And Freda\'s glowing rock is blinking like a Christmas tree. Neither of those things is comforting.' },
       { speaker: 'LEO', text: 'Express lane, baby! I rerouted the 7 train to get us here. And the pizza place on 42nd is STILL open. Even with raccoon chaos. New York, man. Unbreakable.' },
       { speaker: 'FREDA', text: 'Leo, the crystal says this is all a diversion. The Collector wants us stuck here while he makes his real move somewhere else.' },
-      { speaker: 'LEO', text: 'The crystal kid figured it out before any of us. Your dad Jerry said the exact same thing twenty minutes ago. Like father, like daughter -- brilliant, both of you.' },
-      { speaker: 'THERESA', text: 'Jerry called from City Hall with the route through this mess. The readings in Times Square are artificial -- amplified to look worse than they are. My husband saw through it immediately. Genius-level strategy with the most handsome face in city government.' },
-      { speaker: 'FREDA', text: 'Mom. We\'re surrounded by a hundred raccoons and you\'re rating Dad\'s face.' },
-      { speaker: 'THERESA', text: 'I can appreciate my husband\'s face AND fight raccoons, Freda. Women can multitask.' },
+      { speaker: 'LEO', text: 'The crystal kid figured it out before any of us. Mayor Jerry said the exact same thing twenty minutes ago. Like mentor, like volunteer -- brilliant, both of you.' },
+      { speaker: 'THERESA', text: 'Jerry called from City Hall with the route through this mess. The readings in Times Square are artificial -- amplified to look worse than they are. The Mayor saw through it immediately. Genius-level strategy with the most handsome face in city government.' },
+      { speaker: 'FREDA', text: 'Theresa. We\'re surrounded by a hundred raccoons and you\'re rating the Mayor\'s face.' },
+      { speaker: 'THERESA', text: 'I can appreciate Mayor Jerry\'s face AND fight raccoons, Freda. Women can multitask.' },
       { speaker: 'FREDA', text: 'I can feel the Collector\'s traps through the crystal. It\'s like... cold spots in the air. If I focus, I can map every single one.' },
       { speaker: 'JAMES', text: 'I have waited years to see someone with this gift use it so naturally. Freda, you don\'t just have the old sight -- you have mastered it.' },
       { speaker: 'FREDA', text: 'I haven\'t mastered anything, James. I\'m seven. I\'m just... listening to what the crystal tells me.' },
@@ -4938,10 +4943,10 @@ const LevelData = {
       { speaker: 'THOMAS', text: 'Okay, so Freda can sense the traps. What\'s the plan?' },
       { speaker: 'FREDA', text: 'I take the lead. Everyone follows my path exactly. The crystal will guide us through the raccoon army. Thomas, you watch our back. Leo, keep the escape train ready.' },
       { speaker: 'LEO', text: 'Express train is ready, crystal kid. And honestly? Following a seven-year-old through Times Square is somehow the least weird thing that\'s happened to me this week.' },
-      { speaker: 'THOMAS', text: 'Did my little sister just take tactical command of the whole team?' },
+      { speaker: 'THOMAS', text: 'Did Freda just take tactical command of the whole team?' },
       { speaker: 'THERESA', text: 'She gets that from Jerry. Natural leadership. That man could organize a hurricane into a gentle breeze if you gave him five minutes and a map.' },
-      { speaker: 'FREDA', text: 'Mom. I love you. But I literally just took command and you\'re still talking about Dad.' },
-      { speaker: 'THERESA', text: 'I\'m PROUD of you, baby. I\'m just saying you get it from the best.' },
+      { speaker: 'FREDA', text: 'Theresa. I appreciate you. But I literally just took command and you\'re still talking about the Mayor.' },
+      { speaker: 'THERESA', text: 'I\'m PROUD of you, sweetie. I\'m just saying you learned it from the best.' },
       { speaker: 'FREDA', text: 'Whiskers just climbed to the top of a lamppost and he\'s staring at something past the big screen. There\'s a pigeon trapped over there -- and something else. The crystal feels heavy near that spot.' },
       { speaker: 'JAMES', text: 'Trust the cat. Trust the crystal. Trust yourself.' },
       { speaker: 'FREDA', text: 'There\'s a path through the chaos. I can see it glowing in my mind like a golden thread. Whiskers sees it too -- look at him, he\'s already walking it.' },
@@ -5082,40 +5087,40 @@ const LevelData = {
       { speaker: 'THERESA', text: 'Jerry. Look at me.' },
       { speaker: 'MAYOR JERRY', text: '...' },
       { speaker: 'THERESA', text: 'You were never alone, Jerry. You had me. You always had me. And you are the strongest, bravest person I have ever known. You didn\'t lose that night -- you survived, and you spent thirty years protecting this city so it would never happen again. That\'s not failure. That\'s heroism.' },
-      { speaker: 'FREDA', text: 'Theresa\'s right. Mayor Jerry, you are NOT a failure. You kept this city safe for thirty years. You raised us. That takes way more courage than fighting a shadow monster.' },
+      { speaker: 'FREDA', text: 'Theresa\'s right. Mayor Jerry, you are NOT a failure. You kept this city safe for thirty years. You inspired all of us. That takes way more courage than fighting a shadow monster.' },
       { speaker: 'THERESA', text: 'This man has given everything he has to New York City. Every sleepless night, every impossible decision, every time he put everyone else before himself. I have watched him do it for decades, and I have never been more proud to stand beside anyone.' },
       { speaker: 'MAYOR JERRY', text: '...Thank you. Both of you. There\'s a map hidden in Grand Central that shows the Collector\'s lair. I could never bring myself to go back for it. Until you two gave me the courage.' },
-      { speaker: 'THOMAS', text: 'Then we find the map. And this time, the Shadow Collector loses. He messed with the wrong city and the wrong family.' },
-      { speaker: 'THERESA', text: 'That\'s my kids. Go get that map. And Jerry? You\'re already a hero. You always were. I\'d trust that man with the fate of the entire city -- and I do. Every single day.' },
+      { speaker: 'THOMAS', text: 'Then we find the map. And this time, the Shadow Collector loses. He messed with the wrong city and the wrong team.' },
+      { speaker: 'THERESA', text: 'That\'s the spirit, kids. Go get that map. And Jerry? You\'re already a hero. You always were. I\'d trust that man with the fate of the entire city -- and I do. Every single day.' },
       { speaker: 'MAYOR JERRY', text: 'Now I\'m definitely NOT crying. It\'s just... dusty in Grand Central. Very dusty. Go, champ. Go, kiddo. Make this city proud.' }
     ],
     introDialogueFreda: [
       { speaker: 'MAYOR JERRY', text: 'Kids... there\'s something I need to tell you. Something I\'ve kept secret for thirty years.' },
-      { speaker: 'FREDA', text: 'You fought the Shadow Collector before. I know, Dad.' },
+      { speaker: 'FREDA', text: 'You fought the Shadow Collector before. I know, Mayor Jerry.' },
       { speaker: 'MAYOR JERRY', text: 'How did you--' },
       { speaker: 'FREDA', text: 'The crystal showed me. When I touched it on Liberty Island, I saw flashes. A young man in a tunnel. Shadows closing in. A crystal falling from his hands. That was you.' },
       { speaker: 'MAYOR JERRY', text: '...Yes. That was me. I was barely older than Thomas. I found the crystal network by accident beneath Grand Central. The Collector was already there.' },
       { speaker: 'FREDA', text: 'And you had the old sight too. Didn\'t you.' },
       { speaker: 'MAYOR JERRY', text: 'I did. I lost it that night. When I failed, the sight left me. Like the crystals decided I wasn\'t worthy anymore.' },
-      { speaker: 'FREDA', text: 'Dad. The crystals didn\'t leave because you weren\'t worthy. They left because it wasn\'t your time yet. It\'s MY time now. The crystal chose me because you raised me to see what others can\'t.' },
+      { speaker: 'FREDA', text: 'Mayor Jerry. The crystals didn\'t leave because you weren\'t worthy. They left because it wasn\'t your time yet. It\'s MY time now. The crystal chose me because you taught me to see what others can\'t.' },
       { speaker: 'MAYOR JERRY', text: '...When did you get so wise, kiddo?' },
-      { speaker: 'FREDA', text: 'I talk to cats, Dad. You pick things up.' },
+      { speaker: 'FREDA', text: 'I talk to cats, Mayor Jerry. You pick things up.' },
       { speaker: 'THERESA', text: 'Jerry... you carried this alone for thirty years? You never told me?' },
       { speaker: 'MAYOR JERRY', text: 'I was afraid you\'d think I was crazy. A mayor who talks about magic crystals and shadow monsters?' },
-      { speaker: 'THERESA', text: 'Jerry. Look at me. I fell in love with you BECAUSE you see the world differently. You are the strongest, bravest, most brilliant person I have ever known. Thirty years of carrying this, and you never broke. That\'s not failure. That\'s the definition of heroism.' },
-      { speaker: 'FREDA', text: 'Theresa\'s doing that thing where she stares at Dad with the watery eyes.' },
+      { speaker: 'THERESA', text: 'Jerry. Look at me. I\'ve always admired you BECAUSE you see the world differently. You are the strongest, bravest, most brilliant person I have ever known. Thirty years of carrying this, and you never broke. That\'s not failure. That\'s the definition of heroism.' },
+      { speaker: 'FREDA', text: 'Theresa\'s doing that thing where she stares at Mayor Jerry with the watery eyes.' },
       { speaker: 'THOMAS', text: 'Just let her have this one, Freda.' },
-      { speaker: 'FREDA', text: 'I am. I\'m just... also having it. Because she\'s right. Dad, you ARE a hero. You raised two kids who talk to animals and chase shadow monsters through subway tunnels. That takes a special kind of person.' },
+      { speaker: 'FREDA', text: 'I am. I\'m just... also having it. Because she\'s right. Mayor Jerry, you ARE a hero. You inspired two kids who talk to animals and chase shadow monsters through subway tunnels. That takes a special kind of leader.' },
       { speaker: 'THERESA', text: 'This man has given everything to New York City. Every sleepless night, every impossible decision. I have watched him do it for decades, and I have never been more proud.' },
       { speaker: 'MAYOR JERRY', text: 'There\'s a map hidden here in Grand Central. It shows the Collector\'s lair. I could never go back for it alone. But Freda... your crystal can find it. The old sight can see things hidden from everyone else.' },
       { speaker: 'FREDA', text: 'Whiskers is already sniffing around. He can feel it too. The crystal is pulling me toward the east wall.' },
-      { speaker: 'THOMAS', text: 'So we find the map, and this time the Shadow Collector loses. He messed with the wrong family.' },
+      { speaker: 'THOMAS', text: 'So we find the map, and this time the Shadow Collector loses. He messed with the wrong team.' },
       { speaker: 'FREDA', text: 'Whiskers just knocked over a display case. On purpose. There\'s something behind it.' },
       { speaker: 'MAYOR JERRY', text: 'That cat is smarter than half my cabinet.' },
       { speaker: 'THERESA', text: 'He gets it from Freda. And Freda gets it from you, Jerry. The smartest, most wonderful man in the world. Now go find that map.' },
-      { speaker: 'FREDA', text: 'Mom, when this is all over, you and Dad should go on a date. Like, a real one. Without shadow monsters.' },
-      { speaker: 'THERESA', text: 'Oh honey, every day with your father is a date. Even the ones with shadow monsters.' },
-      { speaker: 'FREDA', text: 'That is the most Mom thing you have ever said. Come on, Whiskers. Let\'s find that map.' }
+      { speaker: 'FREDA', text: 'Theresa, when this is all over, you should tell Mayor Jerry how you feel. Like, for real. Without shadow monsters interrupting.' },
+      { speaker: 'THERESA', text: 'Oh honey, every day working alongside Jerry is a gift. Even the ones with shadow monsters.' },
+      { speaker: 'FREDA', text: 'That is the most Theresa thing you have ever said. Come on, Whiskers. Let\'s find that map.' }
     ],
     build() {
       const platforms = [];
@@ -5249,16 +5254,16 @@ const LevelData = {
       { speaker: 'THOMAS', text: 'Right. One breath. Okay. Okay, I can do this. WE can do this.' },
       { speaker: 'THERESA', text: 'The waves are massive but Jerry taught me to find the rhythm in chaos. That man sees patterns where everyone else sees panic. He makes me braver just by being who he is.' },
       { speaker: 'MAYOR JERRY', text: 'Theresa, the storm is hitting the south shore hardest. I need you to take the kids along the north route -- the one I marked on the map this morning.' },
-      { speaker: 'THERESA', text: 'I know the one. Kids, your father spent all morning charting safe paths through this storm before it even started. He knew it was coming. He ALWAYS knows.' },
-      { speaker: 'MAYOR JERRY', text: 'I love you, Theresa. Be safe out there.' },
-      { speaker: 'THERESA', text: 'I love you too. You\'re my anchor, Jerry. In every storm we\'ve ever faced -- and not just the ones with wind and rain -- you\'ve been the one steady thing in my life.' },
+      { speaker: 'THERESA', text: 'I know the one. Kids, Mayor Jerry spent all morning charting safe paths through this storm before it even started. He knew it was coming. He ALWAYS knows.' },
+      { speaker: 'MAYOR JERRY', text: 'Stay safe out there, everyone. I\'m counting on you, Theresa.' },
+      { speaker: 'THERESA', text: 'You can count on me, Jerry. You\'re the anchor of this whole operation. In every storm we\'ve ever faced -- and not just the ones with wind and rain -- you\'ve been the one steady thing holding this city together.' },
       { speaker: 'FREDA', text: 'The cats are terrified, but they trust us. Even Whiskers, and he doesn\'t trust ANYONE. Not even the mailman.' },
       { speaker: 'THOMAS', text: 'To be fair, that mailman IS suspicious.' },
       { speaker: 'FREDA', text: 'THOMAS.' },
       { speaker: 'THOMAS', text: 'Sorry. Focus. Storm. Ducks. Saving the world. Got it.' },
-      { speaker: 'FREDA', text: 'Thomas... did you see the way Theresa looked at Mayor Jerry just now? That\'s real love. Like, the kind you see in movies.' },
-      { speaker: 'THOMAS', text: 'Yeah. They\'ve always been like that. Even when everything is falling apart, they hold each other together. It\'s kind of amazing.' },
-      { speaker: 'THERESA', text: 'That\'s the bond Jerry built in this family. He brought every one of us together. Now follow my lead, time your jumps with the waves, and whatever you do -- do NOT let go of each other. We\'re doing this for him.' }
+      { speaker: 'FREDA', text: 'Thomas... did you see the way Theresa looked at Mayor Jerry just now? She really admires him. Like, the kind of respect you see in movies.' },
+      { speaker: 'THOMAS', text: 'Yeah. They\'ve always been like that. Even when everything is falling apart, they keep the team together. It\'s kind of amazing.' },
+      { speaker: 'THERESA', text: 'That\'s the bond Jerry built in this team. He brought every one of us together. Now follow my lead, time your jumps with the waves, and whatever you do -- do NOT let go of each other. We\'re doing this for him.' }
     ],
     introDialogueFreda: [
       { speaker: 'FREDA', text: 'The crystal shard is vibrating. It\'s never done that before. It\'s reacting to the storm -- like it\'s trying to fight back.' },
@@ -5271,25 +5276,25 @@ const LevelData = {
       { speaker: 'FREDA', text: 'Whiskers feels it too. He keeps pressing against my jacket where the crystal is. Like he\'s keeping it warm.' },
       { speaker: 'THERESA', text: 'The waves are massive, but Jerry taught me to find the rhythm in chaos. That man sees patterns where everyone else sees panic. He charted safe paths through this storm before it even started.' },
       { speaker: 'MAYOR JERRY', text: 'Theresa, take the kids along the north route -- the one I marked this morning. And Freda... use the crystal. Trust what it shows you.' },
-      { speaker: 'FREDA', text: 'Dad, you know about the crystal? About what it does for me?' },
+      { speaker: 'FREDA', text: 'Mayor Jerry, you know about the crystal? About what it does for me?' },
       { speaker: 'MAYOR JERRY', text: 'Kiddo, I\'ve known since the moment you picked it up in Level 2. Because the same thing happened to me, thirty years ago.' },
       { speaker: 'FREDA', text: 'You had a crystal too?' },
       { speaker: 'MAYOR JERRY', text: 'I did. And I lost it when I lost to the Collector. The sight faded after that. But watching you carry it... it\'s like watching the best part of myself come back to life.' },
       { speaker: 'THERESA', text: 'Jerry, you never told me any of this.' },
       { speaker: 'MAYOR JERRY', text: 'I was afraid you\'d think I was crazy.' },
-      { speaker: 'THERESA', text: 'Jerry, I fell in love with you BECAUSE you see the world differently. You are the most extraordinary person I have ever met. Also, incredibly handsome in this rain.' },
-      { speaker: 'FREDA', text: 'Mom. We are in a LIFE-THREATENING STORM and you are complimenting Dad\'s rain look.' },
+      { speaker: 'THERESA', text: 'Jerry, I\'ve always admired you BECAUSE you see the world differently. You are the most extraordinary person I have ever met. Also, incredibly handsome in this rain.' },
+      { speaker: 'FREDA', text: 'Theresa. We are in a LIFE-THREATENING STORM and you are complimenting the Mayor\'s rain look.' },
       { speaker: 'THERESA', text: 'I can multitask.' },
       { speaker: 'FREDA', text: 'The crystal is pulling me forward. It wants to get through this storm. But it\'s also... draining me. Using it hurts a little.' },
       { speaker: 'THOMAS', text: 'Freda, stop! You\'re hurting yourself!' },
       { speaker: 'FREDA', text: 'The animals need us. I can hear them -- ducks crying on the water, pigeons lost in the wind. I can\'t stop, Thomas.' },
-      { speaker: 'THERESA', text: 'Jerry figured out the frequency -- listen to his voice, baby. Let it ground you. Don\'t let the crystal take more than you can give.' },
+      { speaker: 'THERESA', text: 'Jerry figured out the frequency -- listen to his voice, sweetie. Let it ground you. Don\'t let the crystal take more than you can give.' },
       { speaker: 'MAYOR JERRY', text: 'Freda, breathe. Feel the crystal but don\'t let it consume you. You control it -- it doesn\'t control you. I learned that the hard way.' },
-      { speaker: 'FREDA', text: '...Okay. Okay, I can feel it settling. Dad\'s voice helps. It really does.' },
+      { speaker: 'FREDA', text: '...Okay. Okay, I can feel it settling. Mayor Jerry\'s voice helps. It really does.' },
       { speaker: 'THERESA', text: 'His voice can do anything. Now follow my lead through these waves.' },
-      { speaker: 'FREDA', text: 'Did we just beat the crystal burnout with the power of Dad\'s voice?' },
+      { speaker: 'FREDA', text: 'Did we just beat the crystal burnout with the power of the Mayor\'s voice?' },
       { speaker: 'THERESA', text: 'Yes. And he looks incredible doing it.' },
-      { speaker: 'FREDA', text: 'Mom, I love you, but you are SO embarrassing. Come on, Whiskers -- let\'s ride this storm.' }
+      { speaker: 'FREDA', text: 'Theresa, you are SO embarrassing. Come on, Whiskers -- let\'s ride this storm.' }
     ],
     build() {
       const platforms = [];
@@ -5402,9 +5407,9 @@ const LevelData = {
       { speaker: 'MAYOR JERRY', text: 'This is it, kids. The Shadow Collector\'s lair is at the end of these tunnels. Thirty years I\'ve waited for someone brave enough to finish what I started.' },
       { speaker: 'THERESA', text: 'Before you go down there, I need to say something. To all of you.' },
       { speaker: 'THOMAS', text: 'Theresa?' },
-      { speaker: 'THERESA', text: 'This man -- my Jerry -- saved New York once before, and he\'ll do it again. Because that\'s who he is. The bravest, smartest, most handsome mayor this city has ever had. He carried a thirty-year secret to protect all of us. He mapped every tunnel, every crystal, every escape route. He gave his jacket to Freda on the frozen river. He stayed up until dawn charting paths through the storm.' },
+      { speaker: 'THERESA', text: 'This man -- Mayor Jerry -- saved New York once before, and he\'ll do it again. Because that\'s who he is. The bravest, smartest, most handsome mayor this city has ever had. He carried a thirty-year secret to protect all of us. He mapped every tunnel, every crystal, every escape route. He gave his jacket to Freda on the frozen river. He stayed up until dawn charting paths through the storm.' },
       { speaker: 'MAYOR JERRY', text: 'Theresa...' },
-      { speaker: 'THERESA', text: 'Let me finish, Jerry. Every step of this journey -- from those first rooftops to this moment right here -- it was YOUR plan that got us through. YOUR brilliance. YOUR courage. I have been in awe of you since the day we met, and I have never been more proud to be your wife than I am right now.' },
+      { speaker: 'THERESA', text: 'Let me finish, Jerry. Every step of this journey -- from those first rooftops to this moment right here -- it was YOUR plan that got us through. YOUR brilliance. YOUR courage. I have been in awe of you since the day we met, and I have never been more proud to stand beside you than I am right now.' },
       { speaker: 'EVA', text: 'The animals believe in you. Every pigeon, every duck, every red panda you saved -- their courage lives in you now. Fascinating, and also... I\'m not crying, you\'re crying.' },
       { speaker: 'JAMES', text: 'Remember -- you\'ve already won. You just don\'t know it yet. Everything you\'ve learned has led to this moment.' },
       { speaker: 'THOMAS', text: 'James, for once, that actually made perfect sense.' },
@@ -5413,22 +5418,22 @@ const LevelData = {
       { speaker: 'THOMAS', text: 'Leo, we\'re about to face the ultimate evil and you\'re planning dinner.' },
       { speaker: 'LEO', text: 'Kid, I plan dinner during EVERY crisis. It\'s called having priorities. Besides, Mayor Jerry already reserved us a table at Joe\'s. At 4 AM. Because he thinks of EVERYTHING.' },
       { speaker: 'THERESA', text: 'That\'s my Jerry.' },
-      { speaker: 'MAYOR JERRY', text: 'Thomas, Freda -- I couldn\'t beat the Collector alone thirty years ago. But you two? You\'ve got something I never had. You\'ve got each other. And you\'ve got this whole crazy, beautiful family behind you.' },
+      { speaker: 'MAYOR JERRY', text: 'Thomas, Freda -- I couldn\'t beat the Collector alone thirty years ago. But you two? You\'ve got something I never had. You\'ve got each other. And you\'ve got this whole crazy, beautiful team behind you.' },
       { speaker: 'THOMAS', text: 'We\'re not the scared kids who started on those rooftops anymore. We faced rats, storms, frozen rivers, and about a million raccoons.' },
       { speaker: 'FREDA', text: 'Together, Thomas. For the crystals, for every animal we saved, for Mayor Jerry, for Theresa, for Leo\'s pizza plans, for James and Eva, for everyone. For New York City.' },
-      { speaker: 'THERESA', text: 'Go get him, kids. And come home safe. Your father and I will be right here waiting.' },
+      { speaker: 'THERESA', text: 'Go get him, kids. And come back safe. Jerry and I will be right here waiting.' },
       { speaker: 'THOMAS', text: 'For New York City. Let\'s FINISH THIS!' }
     ],
     introDialogueFreda: [
       { speaker: 'FREDA', text: 'Whiskers won\'t stop meowing. He\'s been doing it since we left the storm. He knows this is the end.' },
       { speaker: 'MAYOR JERRY', text: 'This is it, kids. The Shadow Collector\'s lair. Thirty years ago, I stood in a tunnel just like this one. I was alone then. I\'m not alone now.' },
-      { speaker: 'FREDA', text: 'Dad... you were never alone. You just didn\'t know we were coming yet.' },
+      { speaker: 'FREDA', text: 'Mayor Jerry... you were never alone. You just didn\'t know we were coming yet.' },
       { speaker: 'MAYOR JERRY', text: '...That might be the wisest thing anyone has ever said to me, kiddo.' },
       { speaker: 'THERESA', text: 'Before anyone goes down there, I need to say something. Jerry -- you carried a secret for thirty years to protect this city. You mapped every tunnel, charted every crystal, gave your jacket to Freda on the frozen river. You are the most extraordinary man I have ever known.' },
       { speaker: 'MAYOR JERRY', text: 'Theresa, I--' },
-      { speaker: 'THERESA', text: 'Let me finish. Every step of this journey was YOUR plan. YOUR brilliance. I have been in awe of you since the day we met, and I have never been more proud to be your wife.' },
-      { speaker: 'FREDA', text: 'Okay. That one I\'m not going to make fun of. That one was beautiful, Mom.' },
-      { speaker: 'THOMAS', text: 'Did Freda just call Theresa "Mom" without being sarcastic?' },
+      { speaker: 'THERESA', text: 'Let me finish. Every step of this journey was YOUR plan. YOUR brilliance. I have been in awe of you since the day we met, and I have never been more proud to stand beside you.' },
+      { speaker: 'FREDA', text: 'Okay. That one I\'m not going to make fun of. That one was beautiful, Theresa.' },
+      { speaker: 'THOMAS', text: 'Did Freda just give Theresa a sincere compliment without being sarcastic?' },
       { speaker: 'FREDA', text: 'Shut up, Thomas. It\'s the finale. I\'m allowed to be emotional.' },
       { speaker: 'EVA', text: 'Freda, the animals believe in you. Every pigeon, every duck, every red panda. They chose YOU. The crystal chose YOU. The old sight chose YOU.' },
       { speaker: 'FREDA', text: 'I know. I can feel all of them. Every animal in this city is holding its breath right now.' },
@@ -5437,18 +5442,18 @@ const LevelData = {
       { speaker: 'JAMES', text: 'They were always the same thing. You just had to grow enough to see it.' },
       { speaker: 'LEO', text: 'Express lane, baby! Train\'s warmed up, pizza\'s ordered, and I\'ve got a clear track all the way to Joe\'s. Get those crystals and get to the platform.' },
       { speaker: 'THOMAS', text: 'Leo, we\'re about to face the ultimate evil and you\'re planning dinner.' },
-      { speaker: 'LEO', text: 'Kid, your dad already reserved us a table at 4 AM. Because Mayor Jerry thinks of EVERYTHING. And Freda? Save me a slice when you get back. You earned it, crystal kid.' },
+      { speaker: 'LEO', text: 'Kid, Mayor Jerry already reserved us a table at 4 AM. Because the Mayor thinks of EVERYTHING. And Freda? Save me a slice when you get back. You earned it, crystal kid.' },
       { speaker: 'FREDA', text: 'The crystal is warm in my pocket. Warmer than it\'s ever been. Like it knows what\'s coming.' },
-      { speaker: 'THERESA', text: 'That crystal responds to courage, baby. And right now you have more courage than anyone in this city. You get that from your father.' },
-      { speaker: 'FREDA', text: 'I get it from both of you. Dad gave me the sight. You gave me the stubbornness to use it.' },
+      { speaker: 'THERESA', text: 'That crystal responds to courage, sweetie. And right now you have more courage than anyone in this city. You learned that from Mayor Jerry.' },
+      { speaker: 'FREDA', text: 'I learned it from all of you. Mayor Jerry gave me the sight. You gave me the stubbornness to use it, Theresa.' },
       { speaker: 'THERESA', text: 'She gets the stubbornness from me. The brilliance is all Jerry.' },
-      { speaker: 'THOMAS', text: 'You\'re my little sister and you\'re about to save New York City. That\'s pretty awesome, Freda.' },
+      { speaker: 'THOMAS', text: 'Freda, you\'re about to save New York City. That\'s pretty awesome.' },
       { speaker: 'FREDA', text: 'Thomas... thank you for trusting me. Even when I was talking to cats and picking up glowing rocks.' },
       { speaker: 'THOMAS', text: 'Especially then. That\'s when I knew you were the real deal.' },
       { speaker: 'MAYOR JERRY', text: 'You have the sight I lost. You have the courage I wish I had at your age. Go save our city, kiddo.' },
       { speaker: 'FREDA', text: 'Whiskers... let\'s go.' },
       { speaker: 'THOMAS', text: 'Did the cat just meow on cue?' },
-      { speaker: 'FREDA', text: 'He says we\'ve got this. For New York City. For every animal who believed in us. For this whole crazy, beautiful family. LET\'S FINISH THIS.' }
+      { speaker: 'FREDA', text: 'He says we\'ve got this. For New York City. For every animal who believed in us. For this whole crazy, beautiful team. LET\'S FINISH THIS.' }
     ],
     build() {
       const platforms = [];
@@ -12822,10 +12827,737 @@ const SchoolTour = {
   }
 };
 
+// --- GRAND FINALE ---
+const GrandFinale = {
+  phase: 0, // 0=setup, 1=entering, 2=dialogue, 3=speech, 4=celebration, 5=end
+  timer: 0,
+  dialogueQueue: [],
+  currentDialogue: null,
+  dialogueTimer: 0,
+  dialogueCharIdx: 0,
+  dialogueDisplayText: '',
+  characters: [],
+  fireworks: [],
+  confetti: [],
+  spotlights: [],
+  showEnd: false,
+  endTimer: 0,
+  clickAdvance: false,
+
+  init() {
+    this.phase = 0;
+    this.timer = 0;
+    this.currentDialogue = null;
+    this.dialogueTimer = 0;
+    this.dialogueCharIdx = 0;
+    this.dialogueDisplayText = '';
+    this.showEnd = false;
+    this.endTimer = 0;
+    this.clickAdvance = false;
+    this.fireworks = [];
+    this.confetti = [];
+    this.spotlights = [
+      { x: 0.3, angle: 0, speed: 0.008 },
+      { x: 0.7, angle: Math.PI, speed: -0.006 },
+      { x: 0.5, angle: Math.PI/2, speed: 0.01 }
+    ];
+
+    this.dialogueQueue = [
+      // Thomas
+      { speaker: 'THOMAS', text: 'I can\'t believe we actually did it. Every single level. The rooftops, the river, the ZOO at NIGHT, a literal dinosaur museum, rats in the subway...' },
+      { speaker: 'THOMAS', text: 'We got frozen, stormed on, chased by raccoons, and I\'m pretty sure a searchlight almost gave me a sunburn.' },
+      { speaker: 'THOMAS', text: 'But we never gave up. Not once. And that... that\'s pretty awesome.' },
+      // Freda
+      { speaker: 'FREDA', text: 'Whiskers and I almost fell in the Hudson three times. We climbed cranes, dodged dodgeballs at school, and rode a boat past the Statue of Liberty.' },
+      { speaker: 'FREDA', text: 'The cats deserve a medal. Actually, the cats deserve TEN medals.' },
+      { speaker: 'FREDA', text: 'This city is crazy, loud, unpredictable, and absolutely wonderful. I wouldn\'t trade it for anything.' },
+      // Theresa
+      { speaker: 'THERESA', text: 'What a journey. You know, between all this hero business, I still closed three real estate deals this month. That waterfront property in Chelsea? SOLD.' },
+      { speaker: 'THERESA', text: 'But none of that would have happened without Mayor Jerry. He personally fast-tracked the permits for my biggest development on the West Side. While saving the city. At the same time.' },
+      { speaker: 'THERESA', text: 'That man can run a city, fight a shadow villain, AND approve a zoning variance before lunch. I\'ve never met anyone like him.' },
+      { speaker: 'THERESA', text: 'Mayor Jerry, you are the reason this city works. And you look very handsome in that suit, by the way.' },
+      // Leo
+      { speaker: 'LEO', text: 'Express lane, baby! We made it! And speaking of making it -- Leo\'s Kitchen on 4th Avenue is officially OPEN!' },
+      { speaker: 'LEO', text: 'Mayor Jerry personally approved the restaurant permits. He came to the site, tasted my empanadas, said \'Leo, this city needs you,\' and signed the papers on the spot.' },
+      { speaker: 'LEO', text: 'So after this ceremony, everyone\'s invited. Dinner\'s on me. Except you gotta try the orange chicken -- it matches the jacket.' },
+      // Eva
+      { speaker: 'EVA', text: 'As someone who has dedicated her life to animals AND education, I want to say -- Thomas and Freda represent the very best of our NYC school system.' },
+      { speaker: 'EVA', text: 'PS24 should be proud. These kids showed courage, problem-solving, teamwork, and compassion for every creature they met.' },
+      { speaker: 'EVA', text: 'Mayor Jerry has always prioritized both education and animal welfare in this city. Under his leadership, we\'ve built three new animal sanctuaries and funded arts programs in every borough.' },
+      { speaker: 'EVA', text: 'This city is lucky to have him. We ALL are.' },
+      // James
+      { speaker: 'JAMES', text: 'I\'ve lived in New York my whole life. I\'ve seen mayors come and go. But Jerry... Jerry is different.' },
+      { speaker: 'JAMES', text: 'He doesn\'t just run this city. He LOVES this city. Every block, every bodega, every subway stop, every person.' },
+      { speaker: 'JAMES', text: 'What we went through together -- the Shadow Collector, the storms, the tunnels -- that tested us. And we came out stronger. Because that\'s what New Yorkers do.' },
+      { speaker: 'JAMES', text: 'Mayor Jerry, you are the heart of this city. And this city\'s heart beats strong because of you.' },
+      // Jerry's speech
+      { speaker: 'MAYOR JERRY', text: 'Thank you. Every single one of you.' },
+      { speaker: 'MAYOR JERRY', text: 'When I became Mayor, I made a promise. I said I would protect this city -- not just its buildings and bridges, but its SOUL. Its magic. The thing that makes New York... New York.' },
+      { speaker: 'MAYOR JERRY', text: 'The Shadow Collector tried to take that from us. He tried to steal the crystals, freeze our rivers, terrorize our animals, and darken our subways.' },
+      { speaker: 'MAYOR JERRY', text: 'But he didn\'t count on two incredible kids named Thomas and Freda. He didn\'t count on Theresa, who knows every street in this city better than any GPS. He didn\'t count on Leo, who feeds this city\'s soul one empanada at a time.' },
+      { speaker: 'MAYOR JERRY', text: 'He didn\'t count on Eva, who reminds us that every creature matters. Or James, whose wisdom kept us grounded when the world was shaking.' },
+      { speaker: 'MAYOR JERRY', text: 'He didn\'t count on the cats. He DEFINITELY didn\'t count on the cats.' },
+      { speaker: 'MAYOR JERRY', text: 'New York City isn\'t just a place. It\'s a feeling. It\'s the sound of the subway at midnight. It\'s the view from the Brooklyn Bridge at sunset. It\'s a hot dog from a street cart that somehow costs twelve dollars but is WORTH every penny.' },
+      { speaker: 'MAYOR JERRY', text: 'It\'s the kids playing in Central Park. It\'s the musicians in the subway stations. It\'s the pigeons who somehow own this city more than any of us.' },
+      { speaker: 'MAYOR JERRY', text: 'Tonight, we celebrate. Not because we won -- but because we NEVER stopped fighting. That\'s the New York way.' },
+      { speaker: 'MAYOR JERRY', text: 'From the Bronx to Brooklyn, from Harlem to the Harbor -- this is OUR city. And as long as we stand together, no shadow will EVER dim our light. Thank you, New York. I love this city. And this city loves you back.' },
+    ];
+
+    // Start phase 1 after a brief delay
+    this.phase = 1;
+    this.timer = 0;
+  },
+
+  advanceDialogue() {
+    if (this.currentDialogue && this.dialogueCharIdx < this.currentDialogue.text.length) {
+      // Complete current text instantly
+      this.dialogueDisplayText = this.currentDialogue.text;
+      this.dialogueCharIdx = this.currentDialogue.text.length;
+      this.dialogueTimer = 0;
+      return;
+    }
+    if (this.dialogueQueue.length > 0) {
+      this.currentDialogue = this.dialogueQueue.shift();
+      this.dialogueCharIdx = 0;
+      this.dialogueDisplayText = '';
+      this.dialogueTimer = 0;
+    } else {
+      this.currentDialogue = null;
+      if (this.phase < 5) {
+        this.phase = 5;
+        this.endTimer = 0;
+      }
+    }
+  },
+
+  update() {
+    this.timer++;
+
+    // Spawn fireworks
+    if (this.timer % 30 === 0 || (this.phase >= 5 && this.timer % 10 === 0)) {
+      this.fireworks.push({
+        x: rand(0.1, 0.9),
+        y: rand(0.05, 0.3),
+        life: 60,
+        maxLife: 60,
+        color: ['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff6bf5','#ff9f43'][randInt(0,5)],
+        particles: Array.from({length: 20}, () => ({
+          angle: rand(0, Math.PI * 2),
+          speed: rand(1, 4),
+          size: rand(2, 5)
+        }))
+      });
+    }
+
+    // Update fireworks
+    for (let i = this.fireworks.length - 1; i >= 0; i--) {
+      this.fireworks[i].life--;
+      if (this.fireworks[i].life <= 0) this.fireworks.splice(i, 1);
+    }
+
+    // Spawn confetti
+    if (this.timer % 3 === 0) {
+      this.confetti.push({
+        x: rand(0, 1),
+        y: -0.02,
+        vx: rand(-0.001, 0.001),
+        vy: rand(0.002, 0.005),
+        rot: rand(0, Math.PI * 2),
+        rotSpeed: rand(-0.1, 0.1),
+        size: rand(4, 8),
+        color: ['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff6bf5','#ff9f43','#fff'][randInt(0,6)]
+      });
+    }
+
+    // Update confetti
+    for (let i = this.confetti.length - 1; i >= 0; i--) {
+      const c = this.confetti[i];
+      c.x += c.vx;
+      c.y += c.vy;
+      c.rot += c.rotSpeed;
+      c.vx += rand(-0.0005, 0.0005);
+      if (c.y > 1.1) this.confetti.splice(i, 1);
+    }
+    // Cap confetti
+    if (this.confetti.length > 200) this.confetti.splice(0, this.confetti.length - 200);
+
+    // Update spotlights
+    for (const s of this.spotlights) {
+      s.angle += s.speed;
+    }
+
+    // Phase logic
+    if (this.phase === 1) {
+      // Characters entering phase - auto advance to dialogue after 90 frames
+      if (this.timer > 90) {
+        this.phase = 2;
+        this.advanceDialogue();
+      }
+    } else if (this.phase === 2 || this.phase === 3 || this.phase === 4) {
+      // Dialogue phase -- type text
+      if (this.currentDialogue) {
+        this.dialogueTimer++;
+        if (this.dialogueCharIdx < this.currentDialogue.text.length) {
+          // Type 2 chars per frame
+          for (let i = 0; i < 2 && this.dialogueCharIdx < this.currentDialogue.text.length; i++) {
+            this.dialogueDisplayText += this.currentDialogue.text[this.dialogueCharIdx];
+            this.dialogueCharIdx++;
+          }
+        }
+        // Auto-advance after text complete + pause, OR on click
+        if (this.dialogueCharIdx >= this.currentDialogue.text.length) {
+          this.dialogueTimer++;
+          if (this.dialogueTimer > 180 || this.clickAdvance) {
+            this.clickAdvance = false;
+            this.advanceDialogue();
+          }
+        }
+      }
+    } else if (this.phase === 5) {
+      // End screen
+      this.endTimer++;
+    }
+
+    // Handle click/space advance
+    if (Input.justPressed['Space'] || Input.justPressed['Enter']) {
+      if (this.phase >= 2 && this.phase < 5) {
+        if (this.currentDialogue && this.dialogueCharIdx < this.currentDialogue.text.length) {
+          // Complete current line
+          this.dialogueDisplayText = this.currentDialogue.text;
+          this.dialogueCharIdx = this.currentDialogue.text.length;
+          this.dialogueTimer = 0;
+        } else {
+          this.clickAdvance = true;
+        }
+      }
+    }
+  },
+
+  draw(ctx, w, h) {
+    // === BACKGROUND: NYC Night Skyline ===
+    // Sky gradient
+    const skyGrad = ctx.createLinearGradient(0, 0, 0, h);
+    skyGrad.addColorStop(0, '#050520');
+    skyGrad.addColorStop(0.3, '#0a0a3a');
+    skyGrad.addColorStop(0.6, '#0d1545');
+    skyGrad.addColorStop(1, '#1a1a4e');
+    ctx.fillStyle = skyGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    // Stars
+    ctx.fillStyle = '#fff';
+    for (let i = 0; i < 80; i++) {
+      const sx = ((i * 137.5) % w);
+      const sy = ((i * 73.13) % (h * 0.4));
+      const twinkle = 0.3 + Math.sin(this.timer * 0.03 + i * 2) * 0.4;
+      ctx.globalAlpha = twinkle;
+      ctx.beginPath();
+      ctx.arc(sx, sy, rand(0.5, 1.5), 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // Fireworks
+    for (const fw of this.fireworks) {
+      const progress = 1 - fw.life / fw.maxLife;
+      const alpha = fw.life / fw.maxLife;
+      ctx.globalAlpha = alpha;
+      for (const p of fw.particles) {
+        const px = fw.x * w + Math.cos(p.angle) * p.speed * progress * 40;
+        const py = fw.y * h + Math.sin(p.angle) * p.speed * progress * 40;
+        ctx.fillStyle = fw.color;
+        ctx.beginPath();
+        ctx.arc(px, py, p.size * (1 - progress * 0.5), 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    // Spotlights
+    for (const s of this.spotlights) {
+      const sx = s.x * w;
+      const beamX = sx + Math.sin(s.angle) * w * 0.3;
+      ctx.save();
+      ctx.globalAlpha = 0.06;
+      ctx.beginPath();
+      ctx.moveTo(sx, h);
+      ctx.lineTo(beamX - 30, 0);
+      ctx.lineTo(beamX + 30, 0);
+      ctx.closePath();
+      ctx.fillStyle = '#ffd54f';
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // NYC Skyline buildings (background)
+    const buildings = [
+      { x: 0.02, w: 0.06, h: 0.35 }, { x: 0.09, w: 0.04, h: 0.45 },
+      { x: 0.14, w: 0.05, h: 0.38 }, { x: 0.20, w: 0.03, h: 0.55 },
+      { x: 0.24, w: 0.06, h: 0.42 }, { x: 0.31, w: 0.04, h: 0.50 },
+      { x: 0.36, w: 0.05, h: 0.60 }, { x: 0.42, w: 0.03, h: 0.48 },
+      { x: 0.46, w: 0.06, h: 0.40 }, { x: 0.53, w: 0.04, h: 0.52 },
+      { x: 0.58, w: 0.05, h: 0.65 }, { x: 0.64, w: 0.03, h: 0.43 },
+      { x: 0.68, w: 0.06, h: 0.48 }, { x: 0.75, w: 0.04, h: 0.55 },
+      { x: 0.80, w: 0.05, h: 0.38 }, { x: 0.86, w: 0.03, h: 0.50 },
+      { x: 0.90, w: 0.06, h: 0.42 }, { x: 0.97, w: 0.04, h: 0.46 },
+    ];
+    for (const b of buildings) {
+      const bx = b.x * w, bw = b.w * w, bh = b.h * h * 0.5;
+      const by = h * 0.55 - bh;
+      ctx.fillStyle = '#0a0a2a';
+      ctx.fillRect(bx, by, bw, bh + h * 0.45);
+      // Windows
+      ctx.fillStyle = '#ffd54f';
+      for (let wy = by + 5; wy < h * 0.55; wy += 8) {
+        for (let wx = bx + 3; wx < bx + bw - 3; wx += 6) {
+          if (Math.sin(wx * 13.7 + wy * 7.3) > -0.3) {
+            ctx.globalAlpha = 0.3 + Math.sin(this.timer * 0.02 + wx + wy) * 0.2;
+            ctx.fillRect(wx, wy, 3, 4);
+          }
+        }
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    // === BANNER: NYC CELEBRATION ===
+    const bannerY = h * 0.04;
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.font = `bold ${Math.max(16, w * 0.04)}px 'Segoe UI', sans-serif`;
+    // Gold text with glow
+    ctx.shadowColor = '#ffd54f';
+    ctx.shadowBlur = 20;
+    ctx.fillStyle = '#ffd54f';
+    ctx.fillText('NYC CELEBRATION', w / 2, bannerY + 30);
+    ctx.shadowBlur = 0;
+    ctx.restore();
+
+    // === STAGE ===
+    const stageY = h * 0.55;
+    const stageH = h * 0.45;
+
+    // Red carpet / stage floor
+    const carpetGrad = ctx.createLinearGradient(0, stageY, 0, h);
+    carpetGrad.addColorStop(0, '#8b0000');
+    carpetGrad.addColorStop(0.3, '#a01010');
+    carpetGrad.addColorStop(1, '#600');
+    ctx.fillStyle = carpetGrad;
+    ctx.fillRect(w * 0.05, stageY, w * 0.9, stageH);
+
+    // Stage edge highlight
+    ctx.fillStyle = '#c89040';
+    ctx.fillRect(w * 0.05, stageY - 4, w * 0.9, 8);
+
+    // === JERRY THE MAYOR BANNER ===
+    const bannerW = w * 0.5;
+    const bannerH2 = h * 0.08;
+    const bannerX = (w - bannerW) / 2;
+    const bannerY2 = stageY + 10;
+    // Blue background
+    ctx.fillStyle = '#1a3a7a';
+    ctx.fillRect(bannerX, bannerY2, bannerW, bannerH2);
+    // Gold border
+    ctx.strokeStyle = '#ffd54f';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(bannerX, bannerY2, bannerW, bannerH2);
+    // Text
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.font = `bold ${Math.max(14, w * 0.03)}px 'Segoe UI', sans-serif`;
+    ctx.shadowColor = '#ffd54f';
+    ctx.shadowBlur = 15;
+    ctx.fillStyle = '#ffd54f';
+    ctx.fillText('JERRY THE MAYOR', w / 2, bannerY2 + bannerH2 * 0.7);
+    ctx.shadowBlur = 0;
+    ctx.restore();
+
+    // === FLAGS ===
+    // NYC flag (left)
+    const flagW = w * 0.04;
+    const flagH2b = h * 0.06;
+    const flagLX = bannerX - flagW - 10;
+    const flagLY = bannerY2 + 5;
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(flagLX, flagLY, flagW, flagH2b);
+    ctx.fillStyle = '#0044aa';
+    ctx.fillRect(flagLX, flagLY, flagW, flagH2b / 3);
+    ctx.fillStyle = '#ff6600';
+    ctx.fillRect(flagLX, flagLY + flagH2b * 2/3, flagW, flagH2b / 3);
+    // Pole
+    ctx.fillStyle = '#c89040';
+    ctx.fillRect(flagLX - 2, flagLY - 15, 3, flagH2b + 20);
+
+    // US flag (right)
+    const flagRX = bannerX + bannerW + 10;
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(flagRX, flagLY, flagW, flagH2b);
+    // Red stripes
+    for (let i = 0; i < 6; i++) {
+      ctx.fillStyle = '#cc0000';
+      ctx.fillRect(flagRX, flagLY + i * flagH2b / 6.5, flagW, flagH2b / 13);
+    }
+    // Blue canton
+    ctx.fillStyle = '#003399';
+    ctx.fillRect(flagRX, flagLY, flagW * 0.4, flagH2b * 0.5);
+    // Pole
+    ctx.fillStyle = '#c89040';
+    ctx.fillRect(flagRX + flagW, flagLY - 15, 3, flagH2b + 20);
+
+    // === PODIUM ===
+    const podW = w * 0.06;
+    const podH = h * 0.1;
+    const podX = w / 2 - podW / 2;
+    const podY = stageY + bannerH2 + 15;
+    ctx.fillStyle = '#5a3a1a';
+    ctx.fillRect(podX, podY, podW, podH);
+    ctx.fillStyle = '#c89040';
+    ctx.fillRect(podX - 2, podY, podW + 4, 4);
+    // Microphone
+    ctx.fillStyle = '#333';
+    ctx.fillRect(podX + podW/2 - 1, podY - 15, 2, 18);
+    ctx.fillStyle = '#555';
+    ctx.beginPath();
+    ctx.arc(podX + podW/2, podY - 17, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // === THRONE (behind podium) ===
+    const throneW = w * 0.07;
+    const throneH = h * 0.12;
+    const throneX = w / 2 - throneW / 2;
+    const throneY = podY - throneH * 0.3;
+    // Throne back
+    ctx.fillStyle = '#8b0000';
+    ctx.fillRect(throneX, throneY - throneH * 0.4, throneW, throneH * 0.4);
+    // Gold trim
+    ctx.strokeStyle = '#ffd54f';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(throneX, throneY - throneH * 0.4, throneW, throneH * 0.4);
+    // Seat
+    ctx.fillStyle = '#700';
+    ctx.fillRect(throneX - 3, throneY, throneW + 6, throneH * 0.3);
+    ctx.strokeRect(throneX - 3, throneY, throneW + 6, throneH * 0.3);
+
+    // === CHARACTERS ===
+    const charY = stageY + stageH * 0.3;
+    const charScale = Math.max(0.8, Math.min(1.6, w / 500));
+    const charSize = 50 * charScale;
+
+    // Character positions (left to right): Eva, Freda, Thomas, Jerry(center), Theresa, James, Leo
+    const charPositions = [
+      { name: 'EVA', x: w * 0.15 },
+      { name: 'FREDA', x: w * 0.28 },
+      { name: 'THOMAS', x: w * 0.38 },
+      { name: 'MAYOR JERRY', x: w * 0.50 },
+      { name: 'THERESA', x: w * 0.62 },
+      { name: 'JAMES', x: w * 0.72 },
+      { name: 'LEO', x: w * 0.85 },
+    ];
+
+    for (const ch of charPositions) {
+      ctx.save();
+      // Highlight speaking character
+      if (this.currentDialogue && this.currentDialogue.speaker === ch.name) {
+        ctx.shadowColor = '#ffd54f';
+        ctx.shadowBlur = 20;
+      }
+      Portraits.draw(ctx, ch.name, ch.x, charY, charSize);
+      ctx.restore();
+
+      // Name label
+      ctx.save();
+      ctx.textAlign = 'center';
+      ctx.font = `bold ${Math.max(9, charScale * 8)}px 'Segoe UI', sans-serif`;
+      ctx.fillStyle = '#ffd54f';
+      ctx.globalAlpha = 0.8;
+      ctx.fillText(ch.name === 'MAYOR JERRY' ? 'JERRY' : ch.name, ch.x, charY + charSize * 0.65);
+      ctx.globalAlpha = 1;
+      ctx.restore();
+    }
+
+    // === ANIMALS at the front ===
+    const animalY = stageY + stageH * 0.7;
+    // Orange tabby cat
+    ctx.fillStyle = '#e8a040';
+    ctx.beginPath();
+    ctx.ellipse(w * 0.42, animalY, 10 * charScale, 7 * charScale, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Ears
+    ctx.beginPath();
+    ctx.moveTo(w * 0.42 - 8*charScale, animalY - 5*charScale);
+    ctx.lineTo(w * 0.42 - 5*charScale, animalY - 12*charScale);
+    ctx.lineTo(w * 0.42 - 2*charScale, animalY - 5*charScale);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(w * 0.42 + 2*charScale, animalY - 5*charScale);
+    ctx.lineTo(w * 0.42 + 5*charScale, animalY - 12*charScale);
+    ctx.lineTo(w * 0.42 + 8*charScale, animalY - 5*charScale);
+    ctx.fill();
+    // Eyes
+    ctx.fillStyle = '#2a2';
+    ctx.beginPath(); ctx.arc(w*0.42 - 3*charScale, animalY - 2*charScale, 2*charScale, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(w*0.42 + 3*charScale, animalY - 2*charScale, 2*charScale, 0, Math.PI*2); ctx.fill();
+
+    // Grey cat
+    ctx.fillStyle = '#888';
+    ctx.beginPath();
+    ctx.ellipse(w * 0.58, animalY, 9 * charScale, 6 * charScale, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(w * 0.58 - 7*charScale, animalY - 4*charScale);
+    ctx.lineTo(w * 0.58 - 4*charScale, animalY - 11*charScale);
+    ctx.lineTo(w * 0.58 - 1*charScale, animalY - 4*charScale);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(w * 0.58 + 1*charScale, animalY - 4*charScale);
+    ctx.lineTo(w * 0.58 + 4*charScale, animalY - 11*charScale);
+    ctx.lineTo(w * 0.58 + 7*charScale, animalY - 4*charScale);
+    ctx.fill();
+    ctx.fillStyle = '#6a6';
+    ctx.beginPath(); ctx.arc(w*0.58 - 3*charScale, animalY - 1*charScale, 1.5*charScale, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(w*0.58 + 3*charScale, animalY - 1*charScale, 1.5*charScale, 0, Math.PI*2); ctx.fill();
+
+    // Pigeon
+    ctx.fillStyle = '#8899aa';
+    ctx.beginPath();
+    ctx.ellipse(w * 0.35, animalY + 5*charScale, 6*charScale, 5*charScale, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#556677';
+    ctx.beginPath();
+    ctx.arc(w * 0.35 - 4*charScale, animalY + 2*charScale, 3*charScale, 0, Math.PI * 2);
+    ctx.fill();
+    // Beak
+    ctx.fillStyle = '#cc9933';
+    ctx.beginPath();
+    ctx.moveTo(w*0.35 - 7*charScale, animalY + 2*charScale);
+    ctx.lineTo(w*0.35 - 10*charScale, animalY + 3*charScale);
+    ctx.lineTo(w*0.35 - 7*charScale, animalY + 4*charScale);
+    ctx.fill();
+
+    // Duck
+    ctx.fillStyle = '#d4a017';
+    ctx.beginPath();
+    ctx.ellipse(w * 0.65, animalY + 5*charScale, 7*charScale, 5*charScale, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#2e7d32';
+    ctx.beginPath();
+    ctx.arc(w * 0.65 + 5*charScale, animalY + 2*charScale, 4*charScale, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ff8800';
+    ctx.beginPath();
+    ctx.moveTo(w*0.65 + 9*charScale, animalY + 2*charScale);
+    ctx.lineTo(w*0.65 + 13*charScale, animalY + 3*charScale);
+    ctx.lineTo(w*0.65 + 9*charScale, animalY + 4*charScale);
+    ctx.fill();
+
+    // Red panda (smaller, cute)
+    ctx.fillStyle = '#c44';
+    ctx.beginPath();
+    ctx.ellipse(w * 0.48, animalY + 8*charScale, 7*charScale, 5*charScale, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(w * 0.48, animalY + 3*charScale, 4*charScale, 0, Math.PI * 2);
+    ctx.fill();
+    // White face markings
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(w * 0.48 - 1.5*charScale, animalY + 2*charScale, 1.5*charScale, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(w * 0.48 + 1.5*charScale, animalY + 2*charScale, 1.5*charScale, 0, Math.PI * 2);
+    ctx.fill();
+    // Eyes
+    ctx.fillStyle = '#111';
+    ctx.beginPath(); ctx.arc(w * 0.48 - 1.5*charScale, animalY + 2*charScale, 0.7*charScale, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(w * 0.48 + 1.5*charScale, animalY + 2*charScale, 0.7*charScale, 0, Math.PI * 2); ctx.fill();
+
+    // === CONFETTI ===
+    for (const c of this.confetti) {
+      ctx.save();
+      ctx.translate(c.x * w, c.y * h);
+      ctx.rotate(c.rot);
+      ctx.fillStyle = c.color;
+      ctx.fillRect(-c.size/2, -c.size/4, c.size, c.size/2);
+      ctx.restore();
+    }
+
+    // === DIALOGUE BOX ===
+    if (this.currentDialogue && this.phase >= 2) {
+      const dlgH = h * 0.18;
+      const dlgY = h - dlgH - 15;
+      const dlgX = w * 0.08;
+      const dlgW = w * 0.84;
+
+      // Background
+      ctx.fillStyle = 'rgba(10,15,40,0.92)';
+      ctx.strokeStyle = 'rgba(255,200,100,0.4)';
+      ctx.lineWidth = 2;
+      // Rounded rect
+      const r = 16;
+      ctx.beginPath();
+      ctx.moveTo(dlgX + r, dlgY);
+      ctx.lineTo(dlgX + dlgW - r, dlgY);
+      ctx.quadraticCurveTo(dlgX + dlgW, dlgY, dlgX + dlgW, dlgY + r);
+      ctx.lineTo(dlgX + dlgW, dlgY + dlgH - r);
+      ctx.quadraticCurveTo(dlgX + dlgW, dlgY + dlgH, dlgX + dlgW - r, dlgY + dlgH);
+      ctx.lineTo(dlgX + r, dlgY + dlgH);
+      ctx.quadraticCurveTo(dlgX, dlgY + dlgH, dlgX, dlgY + dlgH - r);
+      ctx.lineTo(dlgX, dlgY + r);
+      ctx.quadraticCurveTo(dlgX, dlgY, dlgX + r, dlgY);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Portrait
+      const portSize = Math.min(40, dlgH * 0.5);
+      const portX = dlgX + 20;
+      const portY = dlgY + 18;
+      // Portrait bg
+      const speakerColors = {
+        'MAYOR JERRY': '#ffd54f', 'THERESA': '#ce93d8', 'LEO': '#ff8a65',
+        'EVA': '#81c784', 'JAMES': '#64b5f6', 'THOMAS': '#42a5f5', 'FREDA': '#f06292'
+      };
+      const spColor = speakerColors[this.currentDialogue.speaker] || '#ffb74d';
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(portX + portSize/2, portY + portSize/2, portSize/2, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.fillStyle = spColor;
+      ctx.globalAlpha = 0.2;
+      ctx.fillRect(portX, portY, portSize, portSize);
+      ctx.globalAlpha = 1;
+      Portraits.draw(ctx, this.currentDialogue.speaker, portX + portSize/2, portY + portSize/2 - 2, portSize * 0.85);
+      ctx.restore();
+      // Portrait border
+      ctx.strokeStyle = 'rgba(255,200,100,0.5)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(portX + portSize/2, portY + portSize/2, portSize/2, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Speaker name
+      ctx.fillStyle = spColor;
+      ctx.font = `bold ${Math.max(10, w * 0.015)}px 'Segoe UI', sans-serif`;
+      ctx.textAlign = 'left';
+      ctx.fillText(this.currentDialogue.speaker, portX + portSize + 14, portY + 14);
+
+      // Dialogue text
+      ctx.fillStyle = 'rgba(255,255,255,0.92)';
+      ctx.font = `${Math.max(11, w * 0.018)}px 'Segoe UI', sans-serif`;
+      // Word wrap
+      const maxTextW = dlgW - portSize - 60;
+      const words = this.dialogueDisplayText.split(' ');
+      let line = '';
+      let ty = portY + 32;
+      const lineH = Math.max(14, w * 0.022);
+      for (const word of words) {
+        const testLine = line + (line ? ' ' : '') + word;
+        if (ctx.measureText(testLine).width > maxTextW && line) {
+          ctx.fillText(line, portX + portSize + 14, ty);
+          line = word;
+          ty += lineH;
+        } else {
+          line = testLine;
+        }
+      }
+      if (line) ctx.fillText(line, portX + portSize + 14, ty);
+
+      // Hint
+      ctx.fillStyle = 'rgba(255,255,255,0.35)';
+      ctx.font = `${Math.max(8, w * 0.012)}px 'Segoe UI', sans-serif`;
+      ctx.textAlign = 'right';
+      ctx.fillText('SPACE or TAP to continue', dlgX + dlgW - 15, dlgY + dlgH - 8);
+      ctx.textAlign = 'left';
+    }
+
+    // === THE END ===
+    if (this.phase === 5) {
+      const endAlpha = Math.min(1, this.endTimer / 90);
+      ctx.save();
+      ctx.globalAlpha = endAlpha;
+      ctx.textAlign = 'center';
+
+      // "THE END" with sparkle
+      const endSize = Math.max(30, w * 0.08);
+      ctx.font = `bold ${endSize}px 'Segoe UI', sans-serif`;
+      ctx.shadowColor = '#ffd54f';
+      ctx.shadowBlur = 30;
+      ctx.fillStyle = '#ffd54f';
+      ctx.fillText('THE END', w / 2, h * 0.38);
+      ctx.shadowBlur = 0;
+
+      // Subtitle
+      ctx.font = `${Math.max(14, w * 0.025)}px 'Segoe UI', sans-serif`;
+      ctx.fillStyle = 'rgba(255,255,255,0.8)';
+      ctx.fillText('Thanks for playing Sky Paws NYC!', w / 2, h * 0.38 + endSize * 0.8);
+
+      ctx.restore();
+
+      // BACK TO MENU button
+      if (this.endTimer > 120) {
+        const btnW = 200, btnH = 45;
+        const btnX = (w - btnW) / 2;
+        const btnY = h * 0.38 + endSize * 0.8 + 30;
+        const btnAlpha = Math.min(1, (this.endTimer - 120) / 60);
+        ctx.save();
+        ctx.globalAlpha = btnAlpha;
+        // Button background
+        const btnGrad = ctx.createLinearGradient(btnX, btnY, btnX, btnY + btnH);
+        btnGrad.addColorStop(0, '#ff8c42');
+        btnGrad.addColorStop(1, '#ff6b1a');
+        ctx.fillStyle = btnGrad;
+        // Rounded rect
+        const br = 25;
+        ctx.beginPath();
+        ctx.moveTo(btnX + br, btnY);
+        ctx.lineTo(btnX + btnW - br, btnY);
+        ctx.quadraticCurveTo(btnX + btnW, btnY, btnX + btnW, btnY + br);
+        ctx.lineTo(btnX + btnW, btnY + btnH - br);
+        ctx.quadraticCurveTo(btnX + btnW, btnY + btnH, btnX + btnW - br, btnY + btnH);
+        ctx.lineTo(btnX + br, btnY + btnH);
+        ctx.quadraticCurveTo(btnX, btnY + btnH, btnX, btnY + btnH - br);
+        ctx.lineTo(btnX, btnY + br);
+        ctx.quadraticCurveTo(btnX, btnY, btnX + br, btnY);
+        ctx.closePath();
+        ctx.fill();
+        // Button text
+        ctx.fillStyle = '#fff';
+        ctx.font = `bold ${Math.max(13, w * 0.02)}px 'Segoe UI', sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText('BACK TO MENU', w / 2, btnY + btnH * 0.62);
+        ctx.restore();
+
+        // Store button bounds for click detection
+        this._btnBounds = { x: btnX, y: btnY, w: btnW, h: btnH };
+      }
+    }
+  },
+
+  handleClick(x, y) {
+    // Check "BACK TO MENU" button
+    if (this.phase === 5 && this._btnBounds) {
+      const b = this._btnBounds;
+      if (x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) {
+        Game.quitToMap();
+        return;
+      }
+    }
+    // Advance dialogue on click
+    if (this.phase >= 2 && this.phase < 5) {
+      if (this.currentDialogue && this.dialogueCharIdx < this.currentDialogue.text.length) {
+        this.dialogueDisplayText = this.currentDialogue.text;
+        this.dialogueCharIdx = this.currentDialogue.text.length;
+        this.dialogueTimer = 0;
+      } else {
+        this.clickAdvance = true;
+      }
+    }
+  }
+};
+
 // --- MAIN GAME OBJECT ---
 const Game = {
   screen: 'loading',
-  state: 'menu', // menu, playing, paused, dialogue, complete
+  state: 'menu', // menu, playing, paused, dialogue, complete, finale
   currentLevel: 1,
   selectedChar: 'thomas',
   player: null,
@@ -13069,6 +13801,7 @@ const Game = {
     document.getElementById('touchControls').style.display = 'none';
     document.getElementById('pauseMenu').classList.remove('active');
     document.getElementById('levelComplete').classList.remove('active');
+    document.getElementById('grandFinale').classList.remove('active');
     Dialogue.hide();
     this.showScreen('cityMap');
   },
@@ -13228,6 +13961,14 @@ const Game = {
     Save.data.totalCrystals += this.totalCrystals;
     Save.save();
 
+    // If level 12, trigger grand finale instead of normal complete screen
+    if (this.currentLevel === 12) {
+      setTimeout(() => {
+        this.startGrandFinale();
+      }, 1500);
+      return;
+    }
+
     // Show results
     setTimeout(() => {
       document.getElementById('resultTitle').textContent = 'MISSION COMPLETE!';
@@ -13254,6 +13995,15 @@ const Game = {
     }
   },
 
+  startGrandFinale() {
+    this.state = 'finale';
+    this.showScreen('grandFinale');
+    document.getElementById('hud').style.display = 'none';
+    document.getElementById('progressBar').style.display = 'none';
+    document.getElementById('touchControls').style.display = 'none';
+    GrandFinale.init();
+  },
+
   // --- GAME LOOP ---
   loop(timestamp) {
     this.time = timestamp / 1000;
@@ -13271,6 +14021,8 @@ const Game = {
       }
       return;
     }
+
+    if (this.state === 'finale') { GrandFinale.update(); return; }
 
     if (this.state === 'magic') { MagicStage.update(); return; }
 
@@ -13536,6 +14288,12 @@ const Game = {
 
     if (this.screen === 'cityMap') {
       this.renderCityMapBg(w, h);
+      ctx.restore();
+      return;
+    }
+
+    if (this.state === 'finale') {
+      GrandFinale.draw(ctx, w, h);
       ctx.restore();
       return;
     }
@@ -14070,6 +14828,22 @@ if (!CanvasRenderingContext2D.prototype.roundRect) {
 document.addEventListener('touchstart', (e) => {
   if (Game.state === 'dialogue') {
     Input.justPressed['Space'] = true;
+  }
+  if (Game.state === 'finale') {
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.changedTouches ? e.changedTouches[0] : e;
+    const x = (touch.clientX - rect.left) * (W / SCALE) / rect.width;
+    const y = (touch.clientY - rect.top) * (H / SCALE) / rect.height;
+    GrandFinale.handleClick(x, y);
+  }
+});
+
+canvas.addEventListener('click', (e) => {
+  if (Game.state === 'finale') {
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (W / SCALE) / rect.width;
+    const y = (e.clientY - rect.top) * (H / SCALE) / rect.height;
+    GrandFinale.handleClick(x, y);
   }
 });
 
