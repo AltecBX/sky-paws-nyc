@@ -13620,8 +13620,9 @@ const Game = {
       document.getElementById('setTouch').checked = Save.data.settings.touch;
     }
 
-    // Show/hide HUD
+    // Show/hide HUD and progress bar
     document.getElementById('hud').style.display = name === 'none' ? 'flex' : 'none';
+    if (name !== 'none') document.getElementById('progressBar').style.display = 'none';
   },
 
   buildCityMap() {
