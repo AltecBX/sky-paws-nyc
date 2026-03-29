@@ -6172,23 +6172,41 @@ const LevelData = {
         platforms.push({ x: p.x, y: p.y, w: p.w, h: 16, color: '#757575' });
       }
 
-      // Shadow Creature army - Level 12 is the hardest
+      // Shadow Creature army - Level 12 is the HARDEST level in the game
       const creatureTypes = ['shadowwolf', 'ghostflame', 'darkserpent', 'phantomknight', 'voidbat'];
-      for (let x = 400; x < 8500; x += 180) {
+      // Ground floor creatures — dense, every 110px
+      for (let x = 300; x < 8500; x += 110) {
         const type = creatureTypes[Math.floor(Math.random() * creatureTypes.length)];
-        const patrol = type === 'ghostflame' ? 30 : 80 + Math.random() * 100;
+        const patrol = type === 'ghostflame' ? 40 : 100 + Math.random() * 120;
         enemies.push(new Enemy(x, 600, type, patrol));
       }
-      // Boss creatures near Sparky
-      enemies.push(new Enemy(7800, 490, 'phantomknight', 60));
-      enemies.push(new Enemy(7900, 490, 'shadowwolf', 80));
-      enemies.push(new Enemy(8000, 490, 'phantomknight', 60));
-      enemies.push(new Enemy(8100, 490, 'shadowwolf', 80));
+      // Train car rooftop creatures — on top of every other train
+      for (let i = 0; i < trainCars.length; i += 2) {
+        const tc = trainCars[i];
+        enemies.push(new Enemy(tc.x + 50, tc.y - 28, 'shadowwolf', 80));
+        if (i % 4 === 0) enemies.push(new Enemy(tc.x + tc.w - 80, tc.y - 28, 'phantomknight', 60));
+      }
+      // Upper walkway creatures
+      for (const p of upperWalks) {
+        enemies.push(new Enemy(p.x + 30, p.y - 28, 'darkserpent', 60));
+      }
+      // Boss gauntlet near Sparky — 8 bosses in a line
+      enemies.push(new Enemy(7400, 490, 'phantomknight', 50));
+      enemies.push(new Enemy(7550, 600, 'shadowwolf', 70));
+      enemies.push(new Enemy(7700, 490, 'voidbat', 60));
+      enemies.push(new Enemy(7800, 600, 'phantomknight', 50));
+      enemies.push(new Enemy(7900, 490, 'shadowwolf', 70));
+      enemies.push(new Enemy(8000, 600, 'darkserpent', 60));
+      enemies.push(new Enemy(8050, 490, 'phantomknight', 40));
+      enemies.push(new Enemy(8100, 600, 'shadowwolf', 50));
 
-      // 3 searchlights
-      enemies.push(new Enemy(2000, 500, 'searchlight', 0));
-      enemies.push(new Enemy(4500, 480, 'searchlight', 0));
-      enemies.push(new Enemy(7000, 500, 'searchlight', 0));
+      // 6 searchlights (double the other levels)
+      enemies.push(new Enemy(1200, 500, 'searchlight', 0));
+      enemies.push(new Enemy(2500, 480, 'searchlight', 0));
+      enemies.push(new Enemy(3800, 500, 'searchlight', 0));
+      enemies.push(new Enemy(5100, 480, 'searchlight', 0));
+      enemies.push(new Enemy(6400, 500, 'searchlight', 0));
+      enemies.push(new Enemy(7600, 480, 'searchlight', 0));
 
       // Fish everywhere
       for (let x = 200; x < 8800; x += 120) {
@@ -13691,7 +13709,7 @@ const GrandFinale = {
         } else {
           // Text fully displayed — count wait timer, then auto-advance
           this.dialogueTimer++;
-          if (this.dialogueTimer > 480 || this.clickAdvance) {
+          if (this.dialogueTimer > 540 || this.clickAdvance) {
             this.clickAdvance = false;
             this.advanceDialogue();
           }
