@@ -13691,7 +13691,7 @@ const GrandFinale = {
         } else {
           // Text fully displayed — count wait timer, then auto-advance
           this.dialogueTimer++;
-          if (this.dialogueTimer > 420 || this.clickAdvance) {
+          if (this.dialogueTimer > 480 || this.clickAdvance) {
             this.clickAdvance = false;
             this.advanceDialogue();
           }
@@ -14113,19 +14113,19 @@ const GrandFinale = {
 
       // Speaker name
       ctx.fillStyle = spColor;
-      ctx.font = `bold ${Math.max(10, w * 0.015)}px 'Segoe UI', sans-serif`;
+      ctx.font = `bold ${Math.max(14, w * 0.022)}px 'Segoe UI', sans-serif`;
       ctx.textAlign = 'left';
-      ctx.fillText(this.currentDialogue.speaker, portX + portSize + 14, portY + 14);
+      ctx.fillText(this.currentDialogue.speaker, portX + portSize + 14, portY + 16);
 
       // Dialogue text
       ctx.fillStyle = 'rgba(255,255,255,0.92)';
-      ctx.font = `${Math.max(11, w * 0.018)}px 'Segoe UI', sans-serif`;
+      ctx.font = `${Math.max(16, w * 0.026)}px 'Segoe UI', sans-serif`;
       // Word wrap
       const maxTextW = dlgW - portSize - 60;
       const words = this.dialogueDisplayText.split(' ');
       let line = '';
-      let ty = portY + 32;
-      const lineH = Math.max(14, w * 0.022);
+      let ty = portY + 38;
+      const lineH = Math.max(20, w * 0.032);
       for (const word of words) {
         const testLine = line + (line ? ' ' : '') + word;
         if (ctx.measureText(testLine).width > maxTextW && line) {
