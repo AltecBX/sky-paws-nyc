@@ -13150,9 +13150,9 @@ const GrandFinale = {
 
     // === JERRY THE MAYOR BANNER ===
     const bannerW = w * 0.5;
-    const bannerH2 = h * 0.08;
+    const bannerH2 = h * 0.06;
     const bannerX = (w - bannerW) / 2;
-    const bannerY2 = stageY + 10;
+    const bannerY2 = stageY + 5;
     // Blue background
     ctx.fillStyle = '#1a3a7a';
     ctx.fillRect(bannerX, bannerY2, bannerW, bannerH2);
@@ -13203,39 +13203,32 @@ const GrandFinale = {
     ctx.fillStyle = '#c89040';
     ctx.fillRect(flagRX + flagW, flagLY - 15, 3, flagH2b + 20);
 
-    // === PODIUM ===
-    const podW = w * 0.06;
-    const podH = h * 0.1;
-    const podX = w / 2 - podW / 2;
-    const podY = stageY + bannerH2 + 15;
-    ctx.fillStyle = '#5a3a1a';
-    ctx.fillRect(podX, podY, podW, podH);
-    ctx.fillStyle = '#c89040';
-    ctx.fillRect(podX - 2, podY, podW + 4, 4);
-    // Microphone
+    // === MICROPHONE (simple, in front of Jerry's position) ===
+    const micX = w * 0.50;
+    const micY = stageY + stageH * 0.22;
     ctx.fillStyle = '#333';
-    ctx.fillRect(podX + podW/2 - 1, podY - 15, 2, 18);
+    ctx.fillRect(micX - 1, micY, 2, 14);
     ctx.fillStyle = '#555';
     ctx.beginPath();
-    ctx.arc(podX + podW/2, podY - 17, 4, 0, Math.PI * 2);
+    ctx.arc(micX, micY - 2, 3, 0, Math.PI * 2);
     ctx.fill();
 
-    // === THRONE (behind podium) ===
-    const throneW = w * 0.07;
-    const throneH = h * 0.12;
-    const throneX = w / 2 - throneW / 2;
-    const throneY = podY - throneH * 0.3;
-    // Throne back
+    // === THRONE (small, behind Jerry's portrait position) ===
+    const throneW = w * 0.05;
+    const throneX = w * 0.50 - throneW / 2;
+    const throneY2 = stageY + stageH * 0.15;
+    // Throne back (small arch shape above where Jerry sits)
     ctx.fillStyle = '#8b0000';
-    ctx.fillRect(throneX, throneY - throneH * 0.4, throneW, throneH * 0.4);
-    // Gold trim
+    ctx.beginPath();
+    ctx.moveTo(throneX, throneY2 + 20);
+    ctx.lineTo(throneX, throneY2);
+    ctx.quadraticCurveTo(throneX + throneW / 2, throneY2 - 15, throneX + throneW, throneY2);
+    ctx.lineTo(throneX + throneW, throneY2 + 20);
+    ctx.closePath();
+    ctx.fill();
     ctx.strokeStyle = '#ffd54f';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(throneX, throneY - throneH * 0.4, throneW, throneH * 0.4);
-    // Seat
-    ctx.fillStyle = '#700';
-    ctx.fillRect(throneX - 3, throneY, throneW + 6, throneH * 0.3);
-    ctx.strokeRect(throneX - 3, throneY, throneW + 6, throneH * 0.3);
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
 
     // === CHARACTERS ===
     const charY = stageY + stageH * 0.3;
@@ -13269,7 +13262,7 @@ const GrandFinale = {
       ctx.font = `bold ${Math.max(9, charScale * 8)}px 'Segoe UI', sans-serif`;
       ctx.fillStyle = '#ffd54f';
       ctx.globalAlpha = 0.8;
-      ctx.fillText(ch.name === 'MAYOR JERRY' ? 'JERRY' : ch.name, ch.x, charY + charSize * 0.65);
+      ctx.fillText(ch.name === 'MAYOR JERRY' ? 'JERRY' : ch.name, ch.x, charY + charSize * 0.9);
       ctx.globalAlpha = 1;
       ctx.restore();
     }
