@@ -14803,6 +14803,22 @@ const Game = {
         c.x += (cdx / cdist) * pull;
         c.y += (cdy / cdist) * pull;
       }
+      // Cat/dino companion collects fish too (Thomas's cat fetches fish!)
+      if (!c.collected && this.player.catAlive && c.type === 'fish') {
+        const catW = 24, catH = 18;
+        const catRect = { x: this.player.catX, y: this.player.catY, w: catW, h: catH };
+        if (overlap(catRect, c.rect)) {
+          c.collected = true;
+          this.player.fish++;
+          this.totalFish++;
+          this.combo = (this.combo || 0) + 1;
+          this.comboTimer = 90;
+          Particles.emit(c.cx, c.cy, 8, { color: '#ff9800', size: 3, life: 22 });
+          FloatingText.emit(c.cx, c.cy - 10, '+🐟 Cat!', '#ffb74d', 15);
+          Audio.play('collect');
+          continue;
+        }
+      }
       if (overlap(this.player.rect, c.rect)) {
         c.collected = true;
         if (c.type === 'fish') {
