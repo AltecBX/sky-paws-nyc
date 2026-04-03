@@ -2242,6 +2242,11 @@ class Player extends Entity {
       this.catVY = -8;
       this.catOnGround = false;
     }
+    // Cat jumps when player jumps (synchronized jumping)
+    if (this.catOnGround && !this.onGround && this.vy < -3) {
+      this.catVY = -7;
+      this.catOnGround = false;
+    }
     // Cat world bounds
     this.catX = clamp(this.catX, 0, worldW - catW);
     if (this.catY > worldH + 50) { this.catY = this.y; this.catVY = 0; }
@@ -3605,6 +3610,31 @@ class Enemy extends Entity {
       ctx.fillRect(-6, 10, 5, 6 + legA);
       ctx.fillRect(2, 10, 5, 6 - legA);
     } else if (this.type === 'rat') {
+      // Eaten animation — rat shrinks and disappears
+      if (this.eaten) {
+        if (this.eatenTimer > 0) {
+          this.eatenTimer--;
+          const ep = this.eatenTimer / 45;
+          ctx.globalAlpha = ep;
+          ctx.save();
+          ctx.translate(0, (1 - ep) * 10);
+          ctx.scale(ep, ep);
+          // Tiny rat being chomped
+          ctx.fillStyle = '#8d6e63';
+          ctx.beginPath(); ctx.ellipse(0, 2, 8, 5, 0, 0, Math.PI * 2); ctx.fill();
+          ctx.restore();
+          // Chomp marks
+          if (this.eatenTimer > 25) {
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 14px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('*CHOMP*', 0, -15);
+          }
+          ctx.globalAlpha = 1;
+        }
+        ctx.restore();
+        return;
+      }
       ctx.save();
       const t = Date.now() / 1000;
       const legAnim = Math.sin(this.animFrame * Math.PI / 2) * 5;
@@ -10367,19 +10397,19 @@ const MagicStage = {
               wrongVal = values[Math.floor(Math.random()*13)];
             }
             stage.trickData.wrongCard = { suit: wrongSuit, value: wrongVal, color: (wrongSuit === '\u2665' || wrongSuit === '\u2666') ? '#e53935' : '#222' };
-            stage.clickTargets.push({ x: cx, y: cy + 20, r: 40, action() { return true; } });
+            stage.clickTargets.push({ x: cx, y: cy - 110, r: 45, action() { return true; } });
           },
           drawStep(ctx, stage, w, h, t, p) {
             const wc = stage.trickData.wrongCard;
             if (!wc) return;
-            ctx.save(); ctx.translate(cx, cy - 60);
+            ctx.save(); ctx.translate(cx, cy - 150);
             ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.roundRect(-18, -26, 36, 52, 4); ctx.fill();
             ctx.fillStyle = wc.color; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center';
             ctx.fillText(wc.value, 0, -8); ctx.font = 'bold 14px sans-serif'; ctx.fillText(wc.suit, 0, 12);
             ctx.restore();
-            // "No!" button
-            ctx.fillStyle = 'rgba(200,40,40,0.8)'; ctx.beginPath(); ctx.roundRect(cx - 30, cy + 5, 60, 30, 10); ctx.fill();
-            ctx.fillStyle = '#fff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('No!', cx, cy + 25);
+            // "No!" button — above Thomas, below the card
+            ctx.fillStyle = 'rgba(200,40,40,0.8)'; ctx.beginPath(); ctx.roundRect(cx - 35, cy - 125, 70, 32, 12); ctx.fill();
+            ctx.fillStyle = '#fff'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('No!', cx, cy - 104);
           }
         },
         { // Step 5: Right card with sparkles
@@ -10389,7 +10419,7 @@ const MagicStage = {
           thomasState: 'presenting',
           setup(stage) {
             Audio.play('crystal');
-            stage.clickTargets.push({ x: cx, y: cy + 20, r: 40, action(mx, my, s) {
+            stage.clickTargets.push({ x: cx, y: cy - 110, r: 45, action(mx, my, s) {
               Audio.play('complete');
               return true;
             }});
@@ -10399,19 +10429,19 @@ const MagicStage = {
             if (!c) return;
             // Sparkle aura
             ctx.globalAlpha = 0.3 + Math.sin(t * 5) * 0.2;
-            const glow = ctx.createRadialGradient(cx, cy - 60, 5, cx, cy - 60, 50);
+            const glow = ctx.createRadialGradient(cx, cy - 150, 5, cx, cy - 150, 50);
             glow.addColorStop(0, 'rgba(255,213,79,0.5)'); glow.addColorStop(1, 'rgba(255,213,79,0)');
-            ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cx, cy - 60, 50, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cx, cy - 150, 50, 0, Math.PI * 2); ctx.fill();
             ctx.globalAlpha = 1;
             // Card
-            ctx.save(); ctx.translate(cx, cy - 60);
+            ctx.save(); ctx.translate(cx, cy - 150);
             ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.roundRect(-18, -26, 36, 52, 4); ctx.fill();
             ctx.fillStyle = c.color; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center';
             ctx.fillText(c.value, 0, -8); ctx.font = 'bold 14px sans-serif'; ctx.fillText(c.suit, 0, 12);
             ctx.restore();
-            // "Yes!" button
-            ctx.fillStyle = 'rgba(40,180,40,0.8)'; ctx.beginPath(); ctx.roundRect(cx - 30, cy + 5, 60, 30, 10); ctx.fill();
-            ctx.fillStyle = '#fff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('Yes!', cx, cy + 25);
+            // "Yes!" button — above Thomas, below the card
+            ctx.fillStyle = 'rgba(40,180,40,0.8)'; ctx.beginPath(); ctx.roundRect(cx - 35, cy - 125, 70, 32, 12); ctx.fill();
+            ctx.fillStyle = '#fff'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('Yes!', cx, cy - 104);
             stage.spawnSparkles(cx, cy - 60, 1, 40);
           }
         },
@@ -14878,6 +14908,24 @@ const Game = {
       }
 
       if (e.stunned > 0) continue;
+
+      // Cat eats rat! — cat companion attacks rats on contact
+      if (this.player.catAlive && e.type === 'rat' && !e.eaten) {
+        const catW = 24, catH = 18;
+        const catRect = { x: this.player.catX, y: this.player.catY, w: catW, h: catH };
+        if (overlap(catRect, e.rect)) {
+          e.eaten = true;
+          e.stunned = 9999; // permanently disabled
+          e.eatenTimer = 45; // animation frames
+          e.eatenX = e.x; e.eatenY = e.y;
+          Particles.emit(e.cx, e.cy, 8, { color: '#8d6e63', size: 2, life: 15, vy: -2 });
+          Particles.emit(e.cx, e.cy, 5, { color: '#ff9800', size: 3, life: 20, vy: -1 });
+          FloatingText.emit(e.cx, e.cy - 20, '🐱 NOM!', '#ff9800', 18);
+          Audio.play('stomp');
+          this.camera.addShake(2);
+          continue;
+        }
+      }
 
       // Player collision
       if (overlap(this.player.rect, e.rect)) {
