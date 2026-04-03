@@ -13553,6 +13553,1087 @@ const SchoolTour = {
   }
 };
 
+// --- CUBEWILD CATACLYSM ---
+const CubewildTour = {
+  scrollX: 0, scrollSpeed: 1.8,
+  playerX: 0, playerY: 0, playerVY: 0,
+  health: 5, maxHealth: 5,
+  blocks: [], inventory: { stone: 0, crystal: 0, wood: 0 },
+  placedBlocks: [], enemies: [], animals: [], hazards: [],
+  boss: null, zone: 0, particles: [],
+  completed: false, worldW: 18000,
+  floorY: 0, ceilY: 0, walkFrame: 0,
+  bossActive: false, zoneBanner: 0, zoneBannerName: '',
+  lastZone: -1, iFrames: 0, respawnTimer: 0,
+  animalsRescued: 0, bossesDefeated: 0,
+  blockBreakTimers: {}, // keyed by block index
+
+  zones: [
+    { name: 'CRYSTAL CAVERN', start: 0, end: 3600 },
+    { name: 'LAVA MINES', start: 3600, end: 7200 },
+    { name: 'FLOODED TUNNELS', start: 7200, end: 10800 },
+    { name: 'ASH WASTES', start: 10800, end: 14400 },
+    { name: 'SKY FRACTURE', start: 14400, end: 18000 }
+  ],
+
+  getZone() {
+    for (let i = 0; i < this.zones.length; i++) {
+      if (this.scrollX >= this.zones[i].start && this.scrollX < this.zones[i].end) return i;
+    }
+    return 4;
+  },
+
+  init(w, h) {
+    this.scrollX = 0; this.scrollSpeed = 1.8;
+    this.playerX = w * 0.25; this.playerY = h * 0.5;
+    this.playerVY = 0; this.health = 5; this.maxHealth = 5;
+    this.floorY = h * 0.85; this.ceilY = h * 0.08;
+    this.completed = false; this.walkFrame = 0;
+    this.bossActive = false; this.boss = null;
+    this.zone = 0; this.lastZone = -1;
+    this.zoneBanner = 0; this.zoneBannerName = '';
+    this.iFrames = 0; this.respawnTimer = 0;
+    this.animalsRescued = 0; this.bossesDefeated = 0;
+    this.inventory = { stone: 0, crystal: 0, wood: 0 };
+    this.placedBlocks = []; this.particles = [];
+    this.blockBreakTimers = {};
+
+    // Generate blocks
+    this.blocks = [];
+    for (let x = 200; x < this.worldW - 500; x += 60 + Math.random() * 120) {
+      const z = Math.floor(x / 3600);
+      let type = 'stone';
+      const r = Math.random();
+      if (r < 0.15) type = 'crystal';
+      else if (r < 0.3) type = 'wood';
+      else if (z === 1 && r < 0.45) type = 'lava';
+      else if (z === 2 && r < 0.45) type = 'water';
+      const by = this.ceilY + 30 + Math.random() * (this.floorY - this.ceilY - 80);
+      this.blocks.push({ x, y: by, type, hp: type === 'crystal' ? 2 : 1, broken: false, size: 22 + Math.random() * 10 });
+    }
+
+    // Generate enemies
+    this.enemies = [];
+    for (let x = 400; x < this.worldW - 1000; x += 250 + Math.random() * 350) {
+      const z = Math.floor(x / 3600);
+      // Skip boss zones
+      if ((x > 6600 && x < 7000) || (x > 13800 && x < 14200) || (x > 17000 && x < 17600)) continue;
+      let type;
+      if (z === 0) type = 'crawler';
+      else if (z === 1) type = 'burrower';
+      else if (z === 2) type = 'sprinter';
+      else if (z === 3) type = Math.random() < 0.5 ? 'raider' : 'stomper';
+      else type = ['crawler','burrower','sprinter','raider','stomper'][randInt(0,4)];
+      const ey = this.ceilY + 40 + Math.random() * (this.floorY - this.ceilY - 80);
+      this.enemies.push({ x, y: ey, type, alive: true, hp: type === 'stomper' ? 3 : 1, baseY: ey, phase: Math.random() * Math.PI * 2, speed: type === 'sprinter' ? 2.5 : type === 'stomper' ? 0.8 : 1.5 });
+    }
+
+    // Generate animals
+    this.animals = [];
+    const animalTypes = ['chicken','duck','fish','frog','bunny'];
+    for (let x = 300; x < this.worldW - 600; x += 350 + Math.random() * 400) {
+      const z = Math.floor(x / 3600);
+      let aType;
+      if (z <= 1) aType = Math.random() < 0.5 ? 'chicken' : 'duck';
+      else if (z === 2) aType = Math.random() < 0.5 ? 'fish' : 'frog';
+      else aType = animalTypes[randInt(0,4)];
+      const ay = this.ceilY + 50 + Math.random() * (this.floorY - this.ceilY - 100);
+      this.animals.push({ x, y: ay, type: aType, rescued: false, bobPhase: Math.random() * Math.PI * 2 });
+    }
+
+    // Generate hazards
+    this.hazards = [];
+    // Lava pits in zone 1-2
+    for (let x = 3800; x < 7000; x += 200 + Math.random() * 300) {
+      if (Math.random() < 0.4) this.hazards.push({ x, y: this.floorY - 15, w: 60 + Math.random() * 40, h: 15, type: 'lava' });
+    }
+    // Water currents in zone 2-3
+    for (let x = 7400; x < 10600; x += 250 + Math.random() * 300) {
+      if (Math.random() < 0.35) this.hazards.push({ x, y: this.ceilY + Math.random() * (this.floorY - this.ceilY - 60), w: 50, h: 50, type: 'water' });
+    }
+    // Falling rocks in zone 3-4
+    for (let x = 11000; x < 14200; x += 180 + Math.random() * 250) {
+      if (Math.random() < 0.3) this.hazards.push({ x, y: this.ceilY, w: 20, h: 20, type: 'rock', vy: 0, falling: false, fallTimer: Math.random() * 200 });
+    }
+  },
+
+  spawnBoss(type, x) {
+    const h = this.floorY - this.ceilY;
+    const cy = this.ceilY + h * 0.4;
+    if (type === 'deepwatcher') {
+      this.boss = { type, hp: 12, maxHp: 12, x: this.playerX + 180, y: cy, phase: 0, timer: 0, attackTimer: 0, weakPoint: false, weakTimer: 0, hitFlash: 0 };
+    } else if (type === 'ashtitan') {
+      this.boss = { type, hp: 16, maxHp: 16, x: this.playerX + 180, y: cy, phase: 0, timer: 0, attackTimer: 0, weakPoint: false, weakTimer: 0, hitFlash: 0, skulls: [{a:0},{a:2.09},{a:4.19}] };
+    } else if (type === 'voiddrake') {
+      this.boss = { type, hp: 20, maxHp: 20, x: this.playerX + 200, y: cy, phase: 0, timer: 0, attackTimer: 0, weakPoint: false, weakTimer: 0, hitFlash: 0, bodySegs: 5 };
+    }
+    this.bossActive = true;
+  },
+
+  hurtPlayer() {
+    if (this.iFrames > 0) return;
+    this.health--;
+    this.iFrames = 60;
+    Audio.play('hurt');
+    this.addParticles(this.playerX, this.playerY, 8, '#ff5252');
+    FloatingText.emit(this.playerX, this.playerY - 30, 'OUCH!', '#ff5252', 16);
+    if (this.health <= 0) {
+      // Respawn at zone start
+      this.respawnTimer = 60;
+      this.health = this.maxHealth;
+      const z = this.getZone();
+      this.scrollX = this.zones[z].start;
+      this.playerY = (this.floorY + this.ceilY) / 2;
+      this.playerVY = 0;
+      this.bossActive = false;
+      this.boss = null;
+    }
+  },
+
+  addParticles(x, y, count, color) {
+    for (let i = 0; i < count; i++) {
+      if (this.particles.length >= 100) this.particles.shift();
+      this.particles.push({ x, y, vx: rand(-3,3), vy: rand(-4,-1), life: rand(15,35), maxLife: 30, size: rand(2,5), color });
+    }
+  },
+
+  update(w, h) {
+    if (this.completed || this.respawnTimer > 0) {
+      if (this.respawnTimer > 0) { this.respawnTimer--; }
+      return;
+    }
+
+    // Zone transitions
+    const z = this.getZone();
+    if (z !== this.lastZone) {
+      this.lastZone = z;
+      this.zone = z;
+      this.zoneBanner = 120;
+      this.zoneBannerName = this.zones[z].name;
+    }
+    if (this.zoneBanner > 0) this.zoneBanner--;
+
+    // Boss spawning
+    if (!this.bossActive && !this.boss) {
+      if (this.scrollX >= 6600 && this.scrollX < 6900 && this.bossesDefeated === 0) this.spawnBoss('deepwatcher', 6800);
+      else if (this.scrollX >= 13800 && this.scrollX < 14100 && this.bossesDefeated === 1) this.spawnBoss('ashtitan', 14000);
+      else if (this.scrollX >= 17000 && this.scrollX < 17300 && this.bossesDefeated === 2) this.spawnBoss('voiddrake', 17200);
+    }
+
+    // Auto-scroll (stop during boss)
+    if (!this.bossActive) {
+      this.scrollX += this.scrollSpeed;
+    }
+    this.walkFrame += 0.1;
+
+    // Player movement (up/down)
+    if (Input.up()) this.playerVY -= 0.45;
+    if (Input.down()) this.playerVY += 0.45;
+    this.playerVY *= 0.9;
+    this.playerY += this.playerVY;
+    this.playerY = clamp(this.playerY, this.ceilY + 20, this.floorY - 20);
+
+    if (this.iFrames > 0) this.iFrames--;
+
+    const playerWorldX = this.scrollX + this.playerX;
+
+    // Place block (Space)
+    if (Input.action() && this.inventory.stone > 0) {
+      this.inventory.stone--;
+      this.placedBlocks.push({ x: playerWorldX + 30, y: this.playerY, size: 22 });
+      Audio.play('collect');
+    }
+
+    // Block breaking
+    for (let i = 0; i < this.blocks.length; i++) {
+      const b = this.blocks[i];
+      if (b.broken) continue;
+      const sx = b.x - this.scrollX;
+      if (sx < -50 || sx > w + 50) continue;
+      const dx = playerWorldX - b.x;
+      const dy = this.playerY - b.y;
+      if (Math.abs(dx) < b.size + 10 && Math.abs(dy) < b.size + 10) {
+        if (!this.blockBreakTimers[i]) this.blockBreakTimers[i] = 30; // 0.5s at 60fps
+        this.blockBreakTimers[i]--;
+        if (this.blockBreakTimers[i] <= 0) {
+          b.broken = true;
+          delete this.blockBreakTimers[i];
+          if (b.type === 'stone') this.inventory.stone++;
+          else if (b.type === 'crystal') this.inventory.crystal++;
+          else if (b.type === 'wood') this.inventory.wood++;
+          this.addParticles(sx, b.y, 6, b.type === 'crystal' ? '#b388ff' : b.type === 'wood' ? '#8d6e63' : '#9e9e9e');
+          FloatingText.emit(this.playerX, this.playerY - 25, '+1 ' + b.type.toUpperCase(), b.type === 'crystal' ? '#b388ff' : b.type === 'wood' ? '#8d6e63' : '#bdbdbd', 14);
+          Audio.play(b.type === 'crystal' ? 'crystal' : 'collect');
+        }
+      } else {
+        delete this.blockBreakTimers[i];
+      }
+    }
+
+    // Animal rescue
+    for (const a of this.animals) {
+      if (a.rescued) continue;
+      a.bobPhase += 0.04;
+      const dx = playerWorldX - a.x;
+      const dy = this.playerY - a.y;
+      if (Math.abs(dx) < 35 && Math.abs(dy) < 30) {
+        a.rescued = true;
+        this.animalsRescued++;
+        this.addParticles(this.playerX, this.playerY, 8, '#ffd54f');
+        FloatingText.emit(this.playerX, this.playerY - 30, 'RESCUED!', '#ffd54f', 16);
+        Audio.play('rescue');
+      }
+    }
+
+    // Enemy collision
+    let onScreenEnemies = 0;
+    for (const e of this.enemies) {
+      if (!e.alive) continue;
+      const sx = e.x - this.scrollX;
+      if (sx < -80 || sx > w + 80) continue;
+      if (onScreenEnemies >= 15) break;
+      onScreenEnemies++;
+      // Enemy movement
+      e.phase += 0.03;
+      e.y = e.baseY + Math.sin(e.phase) * 30;
+      if (e.type === 'sprinter') e.x -= e.speed * 0.3;
+      // Collision
+      const dx = playerWorldX - e.x;
+      const dy = this.playerY - e.y;
+      if (Math.abs(dx) < 25 && Math.abs(dy) < 25) {
+        e.alive = false;
+        this.hurtPlayer();
+      }
+    }
+
+    // Hazard collision
+    for (const hz of this.hazards) {
+      const sx = hz.x - this.scrollX;
+      if (sx < -100 || sx > w + 100) continue;
+      if (hz.type === 'rock' && !hz.falling) {
+        hz.fallTimer--;
+        if (hz.fallTimer <= 0) { hz.falling = true; hz.vy = 0; }
+      }
+      if (hz.type === 'rock' && hz.falling) {
+        hz.vy += 0.15;
+        hz.y += hz.vy;
+        if (hz.y > this.floorY) { hz.y = this.ceilY; hz.vy = 0; hz.fallTimer = 120 + Math.random() * 100; hz.falling = false; }
+      }
+      const dx = playerWorldX - (hz.x + hz.w / 2);
+      const dy = this.playerY - (hz.y + hz.h / 2);
+      if (Math.abs(dx) < hz.w / 2 + 12 && Math.abs(dy) < hz.h / 2 + 12) {
+        this.hurtPlayer();
+      }
+    }
+
+    // Boss update
+    if (this.bossActive && this.boss) {
+      this.boss.timer++;
+      const b = this.boss;
+      b.y = this.ceilY + (this.floorY - this.ceilY) * 0.4 + Math.sin(b.timer * 0.02) * 40;
+      if (b.hitFlash > 0) b.hitFlash--;
+
+      // Attack cycle: attack for 120 frames, then show weak point for 60 frames
+      b.attackTimer++;
+      if (b.attackTimer < 120) {
+        b.weakPoint = false;
+        // During attack: boss fires hazards at player
+        if (b.attackTimer % 40 === 0) {
+          // Shockwave particle effect
+          this.addParticles(b.x, b.y, 10, b.type === 'deepwatcher' ? '#e040fb' : b.type === 'ashtitan' ? '#ff5722' : '#7c4dff');
+        }
+        // Beam/wave damage check
+        if (b.attackTimer % 30 < 10) {
+          const dx = this.playerX - b.x;
+          const dy = this.playerY - b.y;
+          if (Math.abs(dx) < 60 && Math.abs(dy) < 40) {
+            this.hurtPlayer();
+          }
+        }
+      } else if (b.attackTimer < 180) {
+        b.weakPoint = true;
+        // Player can touch weak point to damage boss
+        const dx = this.playerX - b.x;
+        const dy = this.playerY - b.y;
+        if (Math.abs(dx) < 40 && Math.abs(dy) < 35 && b.weakTimer <= 0) {
+          b.hp--;
+          b.weakTimer = 20;
+          b.hitFlash = 10;
+          Audio.play('stomp');
+          this.addParticles(b.x, b.y, 12, '#ffd54f');
+          FloatingText.emit(b.x, b.y - 40, 'HIT!', '#ffd54f', 18);
+          if (b.hp <= 0) {
+            this.bossActive = false;
+            this.bossesDefeated++;
+            this.addParticles(b.x, b.y, 30, '#ffd54f');
+            FloatingText.emit(b.x, b.y - 50, 'BOSS DEFEATED!', '#ffd54f', 24);
+            Audio.play('complete');
+            this.boss = null;
+          }
+        }
+        if (b && b.weakTimer > 0) b.weakTimer--;
+      } else {
+        b.attackTimer = 0;
+      }
+    }
+
+    // Update particles
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      const p = this.particles[i];
+      p.x += p.vx; p.y += p.vy; p.vy += 0.08; p.life--;
+      if (p.life <= 0) this.particles.splice(i, 1);
+    }
+
+    Particles.update();
+    FloatingText.update();
+
+    // Completion
+    if (this.scrollX >= this.worldW - 100) {
+      this.completed = true;
+      FloatingText.emit(w / 2, h / 3, 'CUBEWILD CATACLYSM COMPLETE!', '#ffd54f', 24);
+      Audio.play('complete');
+    }
+  },
+
+  draw(ctx, w, h) {
+    const t = Date.now() / 1000;
+    const z = this.getZone();
+
+    // === BACKGROUND ===
+    this.drawBackground(ctx, w, h, z, t);
+
+    // === HAZARDS ===
+    for (const hz of this.hazards) {
+      const sx = hz.x - this.scrollX;
+      if (sx < -100 || sx > w + 100) continue;
+      if (hz.type === 'lava') {
+        const pulse = 0.7 + Math.sin(t * 3 + hz.x * 0.01) * 0.3;
+        ctx.fillStyle = `rgba(255,${Math.floor(80 + pulse * 60)},0,${0.7 + pulse * 0.3})`;
+        ctx.fillRect(sx, hz.y, hz.w, hz.h);
+        ctx.fillStyle = `rgba(255,200,0,${pulse * 0.4})`;
+        ctx.fillRect(sx + 2, hz.y + 2, hz.w - 4, hz.h / 3);
+      } else if (hz.type === 'water') {
+        ctx.fillStyle = `rgba(30,136,229,${0.3 + Math.sin(t * 2 + hz.x) * 0.1})`;
+        ctx.fillRect(sx, hz.y, hz.w, hz.h);
+        ctx.strokeStyle = 'rgba(130,200,255,0.4)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let wx = sx; wx < sx + hz.w; wx += 4) {
+          const wy = hz.y + Math.sin(wx * 0.1 + t * 3) * 3;
+          if (wx === sx) ctx.moveTo(wx, wy); else ctx.lineTo(wx, wy);
+        }
+        ctx.stroke();
+      } else if (hz.type === 'rock' && hz.falling) {
+        this.drawVoxelBlock(ctx, sx - 10, hz.y - 10, 20, '#78909c');
+      }
+    }
+
+    // === PLACED BLOCKS ===
+    for (const pb of this.placedBlocks) {
+      const sx = pb.x - this.scrollX;
+      if (sx < -40 || sx > w + 40) continue;
+      this.drawVoxelBlock(ctx, sx - pb.size / 2, pb.y - pb.size / 2, pb.size, '#90a4ae');
+    }
+
+    // === BREAKABLE BLOCKS ===
+    for (let i = 0; i < this.blocks.length; i++) {
+      const b = this.blocks[i];
+      if (b.broken) continue;
+      const sx = b.x - this.scrollX;
+      if (sx < -50 || sx > w + 50) continue;
+      const color = b.type === 'crystal' ? '#9c27b0' : b.type === 'wood' ? '#795548' : b.type === 'lava' ? '#e65100' : b.type === 'water' ? '#1565c0' : '#757575';
+      this.drawVoxelBlock(ctx, sx - b.size / 2, b.y - b.size / 2, b.size, color);
+      // Glow for crystals
+      if (b.type === 'crystal') {
+        ctx.globalAlpha = 0.2 + Math.sin(t * 4 + b.x) * 0.1;
+        ctx.fillStyle = '#e1bee7';
+        ctx.beginPath();
+        ctx.arc(sx, b.y, b.size * 0.8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+      // Crack marks if being broken
+      if (this.blockBreakTimers[i] !== undefined) {
+        ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(sx - 4, b.y - 5);
+        ctx.lineTo(sx + 3, b.y + 2);
+        ctx.lineTo(sx - 2, b.y + 6);
+        ctx.stroke();
+      }
+    }
+
+    // === ANIMALS ===
+    for (const a of this.animals) {
+      if (a.rescued) continue;
+      const sx = a.x - this.scrollX;
+      if (sx < -40 || sx > w + 40) continue;
+      const bob = Math.sin(a.bobPhase) * 3;
+      this.drawCubeAnimal(ctx, sx, a.y + bob, a.type, t);
+    }
+
+    // === ENEMIES ===
+    let drawnEnemies = 0;
+    for (const e of this.enemies) {
+      if (!e.alive) continue;
+      const sx = e.x - this.scrollX;
+      if (sx < -60 || sx > w + 60) continue;
+      if (drawnEnemies >= 15) break;
+      drawnEnemies++;
+      this.drawEnemy(ctx, sx, e.y, e.type, t);
+    }
+
+    // === BOSS ===
+    if (this.boss) {
+      this.drawBoss(ctx, w, h, t);
+    }
+
+    // === PLAYER ===
+    if (this.respawnTimer <= 0) {
+      this.drawCubePlayer(ctx, w, h, t);
+    }
+
+    // === PARTICLES ===
+    for (const p of this.particles) {
+      const alpha = p.life / p.maxLife;
+      ctx.globalAlpha = alpha * 0.8;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
+    }
+    ctx.globalAlpha = 1;
+    Particles.draw(ctx, { x: 0, y: 0 });
+    FloatingText.draw(ctx, { x: 0, y: 0 });
+
+    // === HUD ===
+    this.drawHUD(ctx, w, h);
+
+    // === ZONE BANNER ===
+    if (this.zoneBanner > 0) {
+      const alpha = Math.min(1, this.zoneBanner / 40);
+      ctx.fillStyle = `rgba(0,0,0,${alpha * 0.6})`;
+      ctx.beginPath();
+      ctx.roundRect(w / 2 - 150, h * 0.2, 300, 50, 25);
+      ctx.fill();
+      ctx.fillStyle = `rgba(255,213,79,${alpha})`;
+      ctx.font = 'bold 18px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(this.zoneBannerName, w / 2, h * 0.2 + 33);
+      ctx.textAlign = 'left';
+    }
+
+    // === COMPLETION OVERLAY ===
+    if (this.completed) {
+      ctx.fillStyle = 'rgba(0,0,0,0.7)';
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#ffd54f';
+      ctx.font = 'bold 26px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('CUBEWILD CATACLYSM COMPLETE!', w / 2, h * 0.25);
+      ctx.fillStyle = '#fff';
+      ctx.font = '14px sans-serif';
+      ctx.fillText('Animals Rescued: ' + this.animalsRescued, w / 2, h * 0.38);
+      ctx.fillText('Bosses Defeated: ' + this.bossesDefeated + ' / 3', w / 2, h * 0.45);
+      ctx.fillText('Resources: Stone ' + this.inventory.stone + '  Crystal ' + this.inventory.crystal + '  Wood ' + this.inventory.wood, w / 2, h * 0.52);
+      const stars = this.bossesDefeated === 3 ? 3 : this.bossesDefeated >= 1 ? 2 : 1;
+      ctx.font = '24px sans-serif';
+      ctx.fillText('\u2B50'.repeat(stars) + '\u2606'.repeat(3 - stars), w / 2, h * 0.62);
+      ctx.fillStyle = 'rgba(255,255,255,0.4)';
+      ctx.font = '12px sans-serif';
+      ctx.fillText('Click anywhere to return to map', w / 2, h * 0.72);
+      ctx.textAlign = 'left';
+    }
+
+    // Steering hint
+    if (this.scrollX < 150) {
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.font = '11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Up/Down to move - Touch blocks to break - Space to place blocks', w / 2, h - 28);
+      ctx.textAlign = 'left';
+    }
+
+    // Vignette
+    const vig = ctx.createRadialGradient(w/2, h/2, w*0.2, w/2, h/2, w*0.7);
+    vig.addColorStop(0, 'rgba(0,0,0,0)');
+    vig.addColorStop(1, 'rgba(0,0,0,0.45)');
+    ctx.fillStyle = vig;
+    ctx.fillRect(0, 0, w, h);
+  },
+
+  // === VOXEL BLOCK HELPER ===
+  drawVoxelBlock(ctx, x, y, size, color) {
+    const s = size;
+    const d = s * 0.25; // depth offset for isometric look
+    // Parse color to get shading
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, s, s); // front face
+    // Top face (lighter)
+    ctx.fillStyle = this.lightenColor(color, 40);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + d, y - d);
+    ctx.lineTo(x + s + d, y - d);
+    ctx.lineTo(x + s, y);
+    ctx.closePath();
+    ctx.fill();
+    // Right face (darker)
+    ctx.fillStyle = this.darkenColor(color, 40);
+    ctx.beginPath();
+    ctx.moveTo(x + s, y);
+    ctx.lineTo(x + s + d, y - d);
+    ctx.lineTo(x + s + d, y + s - d);
+    ctx.lineTo(x + s, y + s);
+    ctx.closePath();
+    ctx.fill();
+    // Grid lines on front face
+    ctx.strokeStyle = 'rgba(0,0,0,0.12)';
+    ctx.lineWidth = 0.5;
+    ctx.strokeRect(x + 1, y + 1, s - 2, s - 2);
+    ctx.beginPath();
+    ctx.moveTo(x + s / 2, y); ctx.lineTo(x + s / 2, y + s);
+    ctx.moveTo(x, y + s / 2); ctx.lineTo(x + s, y + s / 2);
+    ctx.stroke();
+    // Specular highlight
+    ctx.fillStyle = 'rgba(255,255,255,0.18)';
+    ctx.fillRect(x + 2, y + 2, s * 0.3, s * 0.2);
+  },
+
+  lightenColor(hex, amt) {
+    let c = hex;
+    if (c[0] === '#') c = c.slice(1);
+    let num = parseInt(c, 16);
+    let r = Math.min(255, (num >> 16) + amt);
+    let g = Math.min(255, ((num >> 8) & 0xff) + amt);
+    let b = Math.min(255, (num & 0xff) + amt);
+    return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+  },
+  darkenColor(hex, amt) {
+    let c = hex;
+    if (c[0] === '#') c = c.slice(1);
+    let num = parseInt(c, 16);
+    let r = Math.max(0, (num >> 16) - amt);
+    let g = Math.max(0, ((num >> 8) & 0xff) - amt);
+    let b = Math.max(0, (num & 0xff) - amt);
+    return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+  },
+
+  // === BACKGROUND PER ZONE ===
+  drawBackground(ctx, w, h, z, t) {
+    let grad;
+    if (z === 0) { // Crystal Cavern
+      grad = ctx.createLinearGradient(0, 0, 0, h);
+      grad.addColorStop(0, '#0a0a2e'); grad.addColorStop(0.5, '#1a1040'); grad.addColorStop(1, '#0d0d30');
+      ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
+      // Crystal clusters on walls
+      for (let i = 0; i < 12; i++) {
+        const cx = ((i * 180 + 50) - this.scrollX * 0.05) % (w + 100) - 50;
+        const cy = (i % 2 === 0) ? this.ceilY + 10 + i * 5 : this.floorY - 15 - i * 3;
+        ctx.fillStyle = `rgba(120,80,200,${0.15 + Math.sin(t * 2 + i) * 0.08})`;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy); ctx.lineTo(cx + 8, cy - 15); ctx.lineTo(cx + 16, cy);
+        ctx.fill();
+        ctx.fillStyle = `rgba(180,140,255,${0.1 + Math.sin(t * 3 + i * 2) * 0.06})`;
+        ctx.beginPath();
+        ctx.moveTo(cx + 5, cy); ctx.lineTo(cx + 10, cy - 10); ctx.lineTo(cx + 15, cy);
+        ctx.fill();
+      }
+      // Stalactites
+      for (let i = 0; i < 20; i++) {
+        const sx = ((i * 100) - this.scrollX * 0.08) % (w + 60) - 30;
+        ctx.fillStyle = '#1a1530';
+        ctx.beginPath();
+        ctx.moveTo(sx, this.ceilY); ctx.lineTo(sx + 5, this.ceilY + 15 + i % 5 * 3); ctx.lineTo(sx + 10, this.ceilY);
+        ctx.fill();
+      }
+    } else if (z === 1) { // Lava Mines
+      grad = ctx.createLinearGradient(0, 0, 0, h);
+      grad.addColorStop(0, '#1a0a00'); grad.addColorStop(0.5, '#3d1500'); grad.addColorStop(1, '#4a1a00');
+      ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
+      // Lava rivers at bottom
+      const lavaGrad = ctx.createLinearGradient(0, this.floorY - 20, 0, this.floorY);
+      lavaGrad.addColorStop(0, `rgba(255,${100 + Math.sin(t * 2) * 30},0,0.6)`);
+      lavaGrad.addColorStop(1, `rgba(255,60,0,0.8)`);
+      ctx.fillStyle = lavaGrad;
+      ctx.fillRect(0, this.floorY - 10, w, 10);
+      // Ember particles (background)
+      for (let i = 0; i < 15; i++) {
+        const ex = ((i * 90 + t * 20) % w);
+        const ey = this.floorY - 20 - (t * 30 + i * 40) % (h * 0.6);
+        ctx.globalAlpha = 0.3 + Math.sin(t * 5 + i) * 0.15;
+        ctx.fillStyle = '#ff6d00';
+        ctx.fillRect(ex, ey, 2, 2);
+      }
+      ctx.globalAlpha = 1;
+      // Minecart rails
+      ctx.strokeStyle = 'rgba(120,100,80,0.3)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      const ry = this.floorY - 3;
+      ctx.moveTo(0, ry); ctx.lineTo(w, ry);
+      ctx.moveTo(0, ry - 6); ctx.lineTo(w, ry - 6);
+      ctx.stroke();
+      for (let i = 0; i < w; i += 20) {
+        const rx = (i - this.scrollX * 0.3) % w;
+        ctx.fillStyle = 'rgba(100,80,60,0.25)';
+        ctx.fillRect(rx, ry - 7, 8, 9);
+      }
+    } else if (z === 2) { // Flooded Tunnels
+      grad = ctx.createLinearGradient(0, 0, 0, h);
+      grad.addColorStop(0, '#061520'); grad.addColorStop(0.4, '#0a2535'); grad.addColorStop(1, '#0d3040');
+      ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
+      // Water surface waves
+      ctx.strokeStyle = 'rgba(80,180,220,0.25)';
+      ctx.lineWidth = 1.5;
+      for (let layer = 0; layer < 4; layer++) {
+        ctx.beginPath();
+        for (let x = 0; x < w; x += 3) {
+          const wy = this.ceilY + 20 + layer * 40 + Math.sin((x + this.scrollX * 0.3 + t * 20 + layer * 50) * 0.03) * 5;
+          if (x === 0) ctx.moveTo(x, wy); else ctx.lineTo(x, wy);
+        }
+        ctx.stroke();
+      }
+      // Dripping water
+      for (let i = 0; i < 8; i++) {
+        const dx = ((i * 130 + 30) - this.scrollX * 0.05) % (w + 80) - 40;
+        const dripY = this.ceilY + ((t * 40 + i * 60) % (this.floorY - this.ceilY));
+        ctx.fillStyle = 'rgba(100,200,255,0.4)';
+        ctx.fillRect(dx, dripY, 2, 6);
+      }
+    } else if (z === 3) { // Ash Wastes
+      grad = ctx.createLinearGradient(0, 0, 0, h);
+      grad.addColorStop(0, '#1a0a0a'); grad.addColorStop(0.5, '#2d1515'); grad.addColorStop(1, '#1a0800');
+      ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
+      // Ash particles
+      for (let i = 0; i < 20; i++) {
+        const ax = ((i * 70 + t * 15) % (w + 40)) - 20;
+        const ay = ((t * 10 + i * 50) % h);
+        ctx.globalAlpha = 0.15 + Math.sin(t + i) * 0.05;
+        ctx.fillStyle = '#9e9e9e';
+        ctx.fillRect(ax, ay, 2, 2);
+      }
+      ctx.globalAlpha = 1;
+      // Cracked ground
+      ctx.strokeStyle = 'rgba(100,60,30,0.3)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 10; i++) {
+        const gx = ((i * 140) - this.scrollX * 0.1) % (w + 80) - 40;
+        ctx.beginPath();
+        ctx.moveTo(gx, this.floorY - 5);
+        ctx.lineTo(gx + 15, this.floorY - 12);
+        ctx.lineTo(gx + 30, this.floorY - 3);
+        ctx.stroke();
+      }
+      // Volcanic vents
+      for (let i = 0; i < 5; i++) {
+        const vx = ((i * 250 + 80) - this.scrollX * 0.08) % (w + 100) - 50;
+        ctx.fillStyle = `rgba(255,100,0,${0.15 + Math.sin(t * 4 + i) * 0.1})`;
+        ctx.beginPath();
+        ctx.moveTo(vx, this.floorY);
+        ctx.lineTo(vx + 5, this.floorY - 20 - Math.sin(t * 3 + i) * 8);
+        ctx.lineTo(vx + 10, this.floorY);
+        ctx.fill();
+      }
+    } else { // Sky Fracture (zone 4)
+      grad = ctx.createLinearGradient(0, 0, 0, h);
+      grad.addColorStop(0, '#050010'); grad.addColorStop(0.4, '#0d003a'); grad.addColorStop(1, '#15005a');
+      ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
+      // Distant cube stars
+      for (let i = 0; i < 30; i++) {
+        const sx = ((i * 80 + 20) - this.scrollX * 0.01) % (w + 40) - 20;
+        const sy = 10 + (i * 37) % (h * 0.7);
+        const twinkle = 0.3 + Math.sin(t * 2 + i * 1.5) * 0.2;
+        ctx.globalAlpha = twinkle;
+        ctx.fillStyle = '#e0d0ff';
+        ctx.fillRect(sx, sy, 3, 3);
+      }
+      ctx.globalAlpha = 1;
+      // Floating islands
+      for (let i = 0; i < 8; i++) {
+        const ix = ((i * 220 + 50) - this.scrollX * 0.04) % (w + 200) - 100;
+        const iy = this.ceilY + 40 + (i * 60) % (this.floorY - this.ceilY - 80);
+        ctx.fillStyle = '#1a0a40';
+        ctx.fillRect(ix, iy, 50 + i * 5, 12);
+        ctx.fillStyle = '#250e50';
+        ctx.fillRect(ix + 5, iy - 5, 40 + i * 3, 5);
+      }
+      // Aurora
+      ctx.globalAlpha = 0.08;
+      for (let i = 0; i < 3; i++) {
+        ctx.strokeStyle = ['#4caf50','#00bcd4','#7c4dff'][i];
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        for (let x = 0; x < w; x += 5) {
+          const ay = 30 + i * 15 + Math.sin((x + t * 20 + i * 100) * 0.01) * 20;
+          if (x === 0) ctx.moveTo(x, ay); else ctx.lineTo(x, ay);
+        }
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    // Floor and ceiling
+    ctx.fillStyle = z <= 1 ? '#1a1020' : z === 2 ? '#0a2030' : z === 3 ? '#1a0a0a' : '#0a0020';
+    ctx.fillRect(0, this.floorY, w, h - this.floorY);
+    ctx.fillRect(0, 0, w, this.ceilY);
+    // Floor top edge glow
+    const floorGlow = z === 1 ? 'rgba(255,100,0,0.2)' : z === 2 ? 'rgba(60,180,220,0.15)' : z === 4 ? 'rgba(120,80,255,0.15)' : 'rgba(120,80,200,0.1)';
+    ctx.fillStyle = floorGlow;
+    ctx.fillRect(0, this.floorY - 2, w, 4);
+  },
+
+  // === DRAW CUBE ANIMAL ===
+  drawCubeAnimal(ctx, x, y, type, t) {
+    const colors = { chicken: '#fff9c4', duck: '#ffe082', fish: '#80deea', frog: '#a5d6a7', bunny: '#f8bbd0' };
+    const col = colors[type] || '#e0e0e0';
+    ctx.save();
+    ctx.translate(x, y);
+    // Body (cube)
+    this.drawVoxelBlock(ctx, -8, -6, 16, col);
+    // Head (smaller cube)
+    this.drawVoxelBlock(ctx, -5, -14, 10, col);
+    // Eyes
+    ctx.fillStyle = '#333';
+    ctx.fillRect(-2, -12, 2, 2);
+    ctx.fillRect(3, -12, 2, 2);
+    // Tiny legs
+    ctx.fillStyle = type === 'fish' ? col : '#e8a04c';
+    if (type !== 'fish') {
+      ctx.fillRect(-4, 10, 3, 5);
+      ctx.fillRect(3, 10, 3, 5);
+    } else {
+      // Tail fin
+      ctx.fillRect(8, -4, 5, 3);
+      ctx.fillRect(8, 1, 5, 3);
+    }
+    // Type-specific details
+    if (type === 'chicken') {
+      ctx.fillStyle = '#f44336'; // comb
+      ctx.fillRect(-1, -17, 4, 3);
+    } else if (type === 'frog') {
+      ctx.fillStyle = '#66bb6a'; // big eyes
+      ctx.beginPath(); ctx.arc(-2, -15, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(4, -15, 3, 0, Math.PI * 2); ctx.fill();
+    }
+    // Rescue glow
+    ctx.globalAlpha = 0.15 + Math.sin(t * 4) * 0.08;
+    ctx.fillStyle = '#ffd54f';
+    ctx.beginPath(); ctx.arc(0, 0, 18, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  },
+
+  // === DRAW ENEMY ===
+  drawEnemy(ctx, x, y, type, t) {
+    ctx.save();
+    ctx.translate(x, y);
+    if (type === 'crawler') { // Dark purple cubic spider
+      this.drawVoxelBlock(ctx, -10, -8, 16, '#4a148c');
+      // Legs
+      ctx.strokeStyle = '#6a1b9a'; ctx.lineWidth = 1.5;
+      for (let i = 0; i < 4; i++) {
+        const a = (i - 1.5) * 0.4 + Math.sin(t * 5 + i) * 0.2;
+        ctx.beginPath(); ctx.moveTo(-10, -2 + i * 3); ctx.lineTo(-18 + Math.sin(a) * 3, 5 + i * 2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(6, -2 + i * 3); ctx.lineTo(14 + Math.sin(a) * 3, 5 + i * 2); ctx.stroke();
+      }
+      // Red eyes
+      ctx.fillStyle = '#f44336';
+      ctx.fillRect(-6, -5, 3, 3);
+      ctx.fillRect(1, -5, 3, 3);
+    } else if (type === 'burrower') { // Orange-red segmented worm
+      for (let i = 0; i < 4; i++) {
+        const segX = -i * 10 + Math.sin(t * 4 + i * 0.8) * 3;
+        const segY = Math.sin(t * 3 + i * 1.2) * 4;
+        const glow = 0.7 + Math.sin(t * 5 + i) * 0.3;
+        ctx.fillStyle = `rgba(230,${Math.floor(80 + glow * 40)},0,${0.8 + glow * 0.2})`;
+        ctx.fillRect(segX - 5, segY - 5, 10, 10);
+      }
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(2, -3, 2, 2);
+    } else if (type === 'sprinter') { // Teal cubic lizard
+      this.drawVoxelBlock(ctx, -10, -6, 14, '#00695c');
+      ctx.fillStyle = '#00897b';
+      ctx.fillRect(4, -3, 8, 4); // tail
+      ctx.fillStyle = '#e0f2f1';
+      ctx.fillRect(-6, -4, 2, 2);
+      ctx.fillRect(-1, -4, 2, 2);
+    } else if (type === 'raider') { // Grey cubic raccoon
+      this.drawVoxelBlock(ctx, -9, -7, 14, '#616161');
+      ctx.fillStyle = '#424242'; // mask
+      ctx.fillRect(-6, -5, 10, 3);
+      ctx.fillStyle = `rgba(180,255,180,${0.5 + Math.sin(t * 3) * 0.3})`;
+      ctx.fillRect(-4, -4, 2, 2);
+      ctx.fillRect(2, -4, 2, 2);
+    } else if (type === 'stomper') { // Big brown brute
+      this.drawVoxelBlock(ctx, -14, -12, 24, '#5d4037');
+      this.drawVoxelBlock(ctx, -10, -20, 16, '#6d4c41');
+      ctx.fillStyle = '#8d6e63'; // armor plates
+      ctx.fillRect(-12, -8, 20, 3);
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(-6, -18, 3, 3);
+      ctx.fillRect(3, -18, 3, 3);
+    }
+    ctx.restore();
+  },
+
+  // === DRAW BOSS ===
+  drawBoss(ctx, w, h, t) {
+    const b = this.boss;
+    if (!b) return;
+    ctx.save();
+
+    // Boss HP bar at top
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath(); ctx.roundRect(w * 0.2, 8, w * 0.6, 16, 8); ctx.fill();
+    ctx.fillStyle = b.type === 'deepwatcher' ? '#9c27b0' : b.type === 'ashtitan' ? '#ff5722' : '#7c4dff';
+    const hpFrac = Math.max(0, b.hp / b.maxHp);
+    ctx.beginPath(); ctx.roundRect(w * 0.2 + 2, 10, (w * 0.6 - 4) * hpFrac, 12, 6); ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 9px sans-serif';
+    ctx.textAlign = 'center';
+    const bossNames = { deepwatcher: 'DEEP WATCHER', ashtitan: 'ASH TITAN', voiddrake: 'VOID DRAKE' };
+    ctx.fillText(bossNames[b.type] || 'BOSS', w * 0.5, 20);
+    ctx.textAlign = 'left';
+
+    const flash = b.hitFlash > 0 ? (b.hitFlash % 4 < 2 ? 1 : 0) : 0;
+    if (flash) ctx.globalAlpha = 0.5;
+
+    if (b.type === 'deepwatcher') {
+      // Giant eye in cubic shell
+      ctx.translate(b.x, b.y);
+      this.drawVoxelBlock(ctx, -30, -30, 60, '#3e1a6e');
+      // Eye
+      ctx.fillStyle = '#1a0030';
+      ctx.beginPath(); ctx.ellipse(0, 0, 20, 16, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#f44336';
+      ctx.beginPath(); ctx.arc(Math.sin(t * 2) * 5, Math.cos(t * 1.5) * 3, 10, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#000';
+      ctx.beginPath(); ctx.arc(Math.sin(t * 2) * 5, Math.cos(t * 1.5) * 3, 5, 0, Math.PI * 2); ctx.fill();
+      // Tentacles
+      ctx.strokeStyle = '#6a1b9a'; ctx.lineWidth = 3;
+      for (let i = 0; i < 6; i++) {
+        const a = i * Math.PI / 3 + t * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(a) * 30, Math.sin(a) * 30);
+        ctx.quadraticCurveTo(Math.cos(a) * 50 + Math.sin(t + i) * 10, Math.sin(a) * 50 + Math.cos(t + i) * 10, Math.cos(a) * 45, Math.sin(a) * 45);
+        ctx.stroke();
+      }
+      // Beam attack
+      if (b.attackTimer < 120 && b.attackTimer % 30 < 10) {
+        ctx.strokeStyle = `rgba(244,67,54,${0.4 + Math.sin(t * 10) * 0.2})`;
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(this.playerX - b.x, this.playerY - b.y);
+        ctx.stroke();
+      }
+      // Weak point
+      if (b.weakPoint) {
+        ctx.fillStyle = `rgba(255,213,79,${0.5 + Math.sin(t * 8) * 0.3})`;
+        ctx.beginPath(); ctx.arc(0, 25, 12, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 8px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('HIT!', 0, 28);
+        ctx.textAlign = 'left';
+      }
+    } else if (b.type === 'ashtitan') {
+      ctx.translate(b.x, b.y);
+      // Fire core
+      ctx.fillStyle = `rgba(255,${87 + Math.sin(t * 4) * 30},34,0.8)`;
+      ctx.beginPath(); ctx.arc(0, 0, 20, 0, Math.PI * 2); ctx.fill();
+      // Three orbiting skulls
+      for (let i = 0; i < 3; i++) {
+        const sa = b.skulls[i].a + t * 1.5;
+        const sx = Math.cos(sa) * 40;
+        const sy = Math.sin(sa) * 35;
+        this.drawVoxelBlock(ctx, sx - 10, sy - 10, 20, '#4e342e');
+        ctx.fillStyle = '#ff5722';
+        ctx.fillRect(sx - 5, sy - 5, 3, 3);
+        ctx.fillRect(sx + 2, sy - 5, 3, 3);
+        ctx.fillStyle = '#212121';
+        ctx.fillRect(sx - 3, sy + 1, 6, 3);
+      }
+      // Fire shockwave rings during attack
+      if (b.attackTimer < 120 && b.attackTimer % 20 < 8) {
+        const rRadius = (b.attackTimer % 40) * 3;
+        ctx.strokeStyle = `rgba(255,87,34,${0.4 - rRadius * 0.003})`;
+        ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.arc(0, 0, rRadius, 0, Math.PI * 2); ctx.stroke();
+      }
+      if (b.weakPoint) {
+        ctx.fillStyle = `rgba(255,213,79,${0.5 + Math.sin(t * 8) * 0.3})`;
+        ctx.beginPath(); ctx.arc(0, -30, 12, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 8px sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText('HIT!', 0, -27); ctx.textAlign = 'left';
+      }
+    } else if (b.type === 'voiddrake') {
+      ctx.translate(b.x, b.y);
+      // Segmented body
+      for (let i = b.bodySegs - 1; i >= 0; i--) {
+        const segX = -i * 18 + Math.sin(t * 2 + i * 0.6) * 5;
+        const segY = Math.sin(t * 1.5 + i * 0.8) * 8;
+        this.drawVoxelBlock(ctx, segX - 12, segY - 10, 20 - i * 2, '#1a0050');
+      }
+      // Head
+      this.drawVoxelBlock(ctx, -18, -16, 32, '#2a0070');
+      // Crystal wings
+      for (let side = -1; side <= 1; side += 2) {
+        ctx.fillStyle = `rgba(120,80,255,${0.4 + Math.sin(t * 3) * 0.15})`;
+        ctx.beginPath();
+        ctx.moveTo(0, -10);
+        ctx.lineTo(side * 50, -30 + Math.sin(t * 2) * 5);
+        ctx.lineTo(side * 40, 5);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = '#b388ff'; ctx.lineWidth = 1; ctx.stroke();
+      }
+      // Lava mouth glow
+      ctx.fillStyle = `rgba(255,100,0,${0.5 + Math.sin(t * 5) * 0.2})`;
+      ctx.fillRect(-10, -4, 16, 6);
+      // Eyes
+      ctx.fillStyle = '#f44336';
+      ctx.fillRect(-12, -12, 4, 4);
+      ctx.fillRect(6, -12, 4, 4);
+      // Breath attack
+      if (b.attackTimer < 120 && b.attackTimer % 25 < 12) {
+        ctx.fillStyle = `rgba(255,${80 + Math.sin(t * 10) * 40},0,${0.3 + Math.sin(t * 8) * 0.1})`;
+        ctx.beginPath();
+        ctx.moveTo(-8, 2);
+        ctx.lineTo(this.playerX - b.x - 20, this.playerY - b.y + 15);
+        ctx.lineTo(this.playerX - b.x + 20, this.playerY - b.y - 15);
+        ctx.closePath();
+        ctx.fill();
+      }
+      if (b.weakPoint) {
+        ctx.fillStyle = `rgba(255,213,79,${0.5 + Math.sin(t * 8) * 0.3})`;
+        ctx.beginPath(); ctx.arc(0, 20, 14, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 8px sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText('HIT!', 0, 23); ctx.textAlign = 'left';
+      }
+    }
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  },
+
+  // === DRAW PLAYER WITH CUBIC HELMET ===
+  drawCubePlayer(ctx, w, h, t) {
+    const px = this.playerX, py = this.playerY;
+    const isThomas = Game.selectedChar === 'thomas';
+    if (this.iFrames > 0 && this.iFrames % 4 < 2) return; // Flash when invincible
+
+    ctx.save();
+    ctx.translate(px, py);
+
+    // Shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.15)';
+    ctx.beginPath(); ctx.ellipse(0, 18, 10, 4, 0, 0, Math.PI * 2); ctx.fill();
+
+    // Legs
+    const legA1 = Math.sin(this.walkFrame * 2) * 0.4;
+    const legA2 = Math.sin(this.walkFrame * 2 + Math.PI) * 0.4;
+    ctx.fillStyle = isThomas ? '#1565c0' : '#e91e63';
+    ctx.save(); ctx.translate(-4, 8); ctx.rotate(legA1);
+    ctx.fillRect(-2, 0, 4, 12);
+    ctx.fillStyle = '#333'; ctx.fillRect(-2, 11, 6, 3);
+    ctx.restore();
+    ctx.save(); ctx.translate(4, 8); ctx.rotate(legA2);
+    ctx.fillStyle = isThomas ? '#1565c0' : '#e91e63';
+    ctx.fillRect(-2, 0, 4, 12);
+    ctx.fillStyle = '#333'; ctx.fillRect(-2, 11, 6, 3);
+    ctx.restore();
+
+    // Body
+    ctx.fillStyle = isThomas ? '#1e88e5' : '#ec407a';
+    ctx.fillRect(-7, -8, 14, 18);
+    ctx.fillStyle = isThomas ? '#42a5f5' : '#f48fb1';
+    ctx.fillRect(-5, -6, 10, 3);
+
+    // Arms
+    const armA1 = Math.sin(this.walkFrame * 2) * 0.5;
+    const armA2 = Math.sin(this.walkFrame * 2 + Math.PI) * 0.5;
+    ctx.fillStyle = '#f5c5a3';
+    ctx.save(); ctx.translate(-8, -4); ctx.rotate(armA1); ctx.fillRect(-2, 0, 3, 10); ctx.restore();
+    ctx.save(); ctx.translate(8, -4); ctx.rotate(armA2); ctx.fillRect(-1, 0, 3, 10); ctx.restore();
+
+    // Head
+    ctx.fillStyle = '#f5c5a3';
+    ctx.beginPath(); ctx.arc(0, -14, 8, 0, Math.PI * 2); ctx.fill();
+
+    // Hair (under helmet)
+    if (isThomas) {
+      ctx.fillStyle = '#333';
+      ctx.beginPath(); ctx.arc(0, -17, 7, Math.PI, 0); ctx.fill();
+    } else {
+      ctx.fillStyle = '#5d4037';
+      ctx.beginPath(); ctx.arc(0, -17, 8, Math.PI * 0.8, Math.PI * 0.2); ctx.fill();
+    }
+
+    // Eyes
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.ellipse(-3, -14, 2.5, 2, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(3, -14, 2.5, 2, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#333';
+    ctx.beginPath(); ctx.arc(-2, -14, 1.2, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(4, -14, 1.2, 0, Math.PI * 2); ctx.fill();
+
+    // Mouth
+    ctx.strokeStyle = '#c97c5c'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(1, -10, 3, 0.2, Math.PI - 0.2); ctx.stroke();
+
+    // CUBIC HELMET OVERLAY
+    this.drawVoxelBlock(ctx, -10, -24, 18, '#546e7a');
+    // Visor slit
+    ctx.fillStyle = 'rgba(130,200,255,0.4)';
+    ctx.fillRect(-6, -19, 12, 3);
+
+    ctx.restore();
+  },
+
+  // === HUD ===
+  drawHUD(ctx, w, h) {
+    // Health hearts
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.beginPath(); ctx.roundRect(10, 10, 90, 26, 12); ctx.fill();
+    ctx.font = '13px sans-serif';
+    let hearts = '';
+    for (let i = 0; i < this.maxHealth; i++) hearts += i < this.health ? '\u2665' : '\u2661';
+    ctx.fillStyle = '#f44336';
+    ctx.fillText(hearts, 18, 28);
+
+    // Resources
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.beginPath(); ctx.roundRect(10, 40, 160, 26, 12); ctx.fill();
+    ctx.font = 'bold 10px sans-serif';
+    ctx.fillStyle = '#bdbdbd'; ctx.fillText('\u25A0 ' + this.inventory.stone, 18, 57);
+    ctx.fillStyle = '#b388ff'; ctx.fillText('\u25C6 ' + this.inventory.crystal, 68, 57);
+    ctx.fillStyle = '#8d6e63'; ctx.fillText('\u25A0 ' + this.inventory.wood, 118, 57);
+
+    // Level label
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.beginPath(); ctx.roundRect(w / 2 - 110, 8, 220, 24, 12); ctx.fill();
+    ctx.fillStyle = '#ffd54f';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('CUBEWILD CATACLYSM', w / 2, 25);
+    ctx.textAlign = 'left';
+
+    // Animals rescued
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.beginPath(); ctx.roundRect(w - 110, 10, 100, 26, 12); ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.fillText('\uD83D\uDC3E ' + this.animalsRescued, w - 100, 28);
+
+    // Progress bar
+    const progress = Math.min(1, this.scrollX / this.worldW);
+    ctx.fillStyle = 'rgba(255,255,255,0.1)';
+    ctx.fillRect(10, h - 12, w - 20, 4);
+    ctx.fillStyle = '#7c4dff';
+    ctx.fillRect(10, h - 12, (w - 20) * progress, 4);
+  }
+};
+
 // --- GRAND FINALE ---
 const GrandFinale = {
   phase: 0, // 0=setup, 1=entering, 2=dialogue, 3=speech, 4=celebration, 5=end
@@ -14370,13 +15451,14 @@ const Game = {
       { num: 12, name: 'Final Rescue', icon: '&#x2B50;', bg: 'linear-gradient(135deg,#ff6f00,#ffd54f)' },
       { num: 13, name: (Game.selectedChar === 'freda' ? 'Freda the Magnificent' : 'Thomas the Magnificent'), icon: '🪄', bg: 'linear-gradient(135deg,#4a148c,#7b1fa2)', secret: true },
       { num: 14, name: 'Hudson River Tour', icon: '⛴️', bg: 'linear-gradient(135deg,#1565c0,#42a5f5)', boatTour: true },
-      { num: 15, name: 'PS24 School Tour', icon: '🏫', bg: 'linear-gradient(135deg,#1565c0,#42a5f5)', schoolTour: true }
+      { num: 15, name: 'PS24 School Tour', icon: '🏫', bg: 'linear-gradient(135deg,#1565c0,#42a5f5)', schoolTour: true },
+      { num: 16, name: 'Cubewild Cataclysm', icon: '⛏️', bg: 'linear-gradient(135deg,#2a0050,#6a1b9a)', cubewild: true }
     ];
 
     for (const lv of levels) {
       const node = document.createElement('div');
       // Bonus levels (13-15) unlock after completing all 12 main levels
-      const isBonus = lv.secret || lv.boatTour || lv.schoolTour;
+      const isBonus = lv.secret || lv.boatTour || lv.schoolTour || lv.cubewild;
       const unlocked = isBonus ? Save.data.levelsUnlocked >= 12 : lv.num <= Save.data.levelsUnlocked;
       const stars = Save.data.levelStars[lv.num] || 0;
       const playable = lv.num <= 12 || isBonus;
@@ -14405,8 +15487,13 @@ const Game = {
         node.style.boxShadow = '0 0 15px rgba(21,101,192,0.4)';
       }
 
+      if (lv.cubewild) {
+        node.style.border = '2px solid rgba(180,100,255,0.5)';
+        node.style.boxShadow = '0 0 15px rgba(106,27,154,0.4), inset 0 0 10px rgba(180,100,255,0.1)';
+      }
+
       if (unlocked && playable) {
-        node.onclick = lv.secret ? () => this.startMagicLevel() : lv.boatTour ? () => this.startBoatTour() : lv.schoolTour ? () => this.startSchoolTour() : () => this.startLevel(lv.num);
+        node.onclick = lv.secret ? () => this.startMagicLevel() : lv.boatTour ? () => this.startBoatTour() : lv.schoolTour ? () => this.startSchoolTour() : lv.cubewild ? () => this.startCubewild() : () => this.startLevel(lv.num);
       }
 
       grid.appendChild(node);
@@ -14519,9 +15606,13 @@ const Game = {
     document.getElementById('hud').style.display = 'none';
     document.getElementById('progressBar').style.display = 'none';
     document.getElementById('touchControls').style.display = 'none';
+    document.getElementById('tourTouchControls').style.display = 'none';
     document.getElementById('pauseMenu').classList.remove('active');
     document.getElementById('levelComplete').classList.remove('active');
     document.getElementById('grandFinale').classList.remove('active');
+    if (this._cubewildClickHandler) { canvas.removeEventListener('click', this._cubewildClickHandler); this._cubewildClickHandler = null; }
+    if (this._boatClickHandler) { canvas.removeEventListener('click', this._boatClickHandler); this._boatClickHandler = null; }
+    if (this._schoolClickHandler) { canvas.removeEventListener('click', this._schoolClickHandler); this._schoolClickHandler = null; }
     Dialogue.hide();
     this.showScreen('cityMap');
   },
@@ -14648,6 +15739,49 @@ const Game = {
     this.showScreen('cityMap');
   },
 
+  startCubewild() {
+    this.state = 'cubewild_dialogue';
+    this.showScreen('none');
+    document.getElementById('hud').style.display = 'none';
+    document.getElementById('progressBar').style.display = 'none';
+    const charName = this.selectedChar === 'freda' ? 'FREDA' : 'THOMAS';
+    Dialogue.show([
+      { speaker: 'MAYOR JERRY', text: "There are reports of a dimensional rift opening beneath the city. Everything down there has turned... cubic." },
+      { speaker: charName, text: "Cubic? Like... blocks?" },
+      { speaker: 'EVA', text: "The animals trapped down there have transformed too. They need rescuing." },
+      { speaker: 'JAMES', text: "Be careful. The creatures in The Cubic Rift are unlike anything on the surface." },
+      { speaker: 'THERESA', text: "Mayor Jerry mapped the safest entry point. That man thinks of everything." }
+    ]);
+  },
+
+  _startCubewildAfterDialogue() {
+    this.state = 'cubewild';
+    const w = W / SCALE, h = H / SCALE;
+    CubewildTour.init(w, h);
+    Audio.playMusic('subway');
+    Audio.startAmbient('subway');
+    this._cubewildClickHandler = (e) => {
+      if (CubewildTour.completed) { this.quitCubewild(); }
+    };
+    canvas.addEventListener('click', this._cubewildClickHandler);
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); if (CubewildTour.completed) this.quitCubewild(); }, { passive: false, once: true });
+    if (Input.isTouchDevice) {
+      document.getElementById('tourTouchControls').style.display = 'block';
+    }
+  },
+
+  quitCubewild() {
+    this.state = 'menu';
+    Audio.stopMusic();
+    Audio.stopAmbient();
+    if (this._cubewildClickHandler) {
+      canvas.removeEventListener('click', this._cubewildClickHandler);
+      this._cubewildClickHandler = null;
+    }
+    document.getElementById('tourTouchControls').style.display = 'none';
+    this.showScreen('cityMap');
+  },
+
   togglePause() {
     if (this.state === 'playing') {
       this.state = 'paused';
@@ -14747,6 +15881,14 @@ const Game = {
       return;
     }
 
+    if (this.state === 'cubewild_dialogue') {
+      Dialogue.update();
+      if (!Dialogue.isActive()) {
+        this._startCubewildAfterDialogue();
+      }
+      return;
+    }
+
     if (this.state === 'finale') { GrandFinale.update(); return; }
 
     if (this.state === 'magic') { MagicStage.update(); return; }
@@ -14754,6 +15896,8 @@ const Game = {
     if (this.state === 'boat') { BoatTour.update(W / SCALE, H / SCALE); return; }
 
     if (this.state === 'school') { SchoolTour.update(W / SCALE, H / SCALE); return; }
+
+    if (this.state === 'cubewild') { CubewildTour.update(W / SCALE, H / SCALE); return; }
 
     if (this.state !== 'playing') return;
 
@@ -15069,6 +16213,25 @@ const Game = {
 
     if (this.state === 'school') {
       SchoolTour.draw(ctx, w, h);
+      ctx.restore();
+      return;
+    }
+
+    if (this.state === 'cubewild' || this.state === 'cubewild_dialogue') {
+      if (this.state === 'cubewild') {
+        CubewildTour.draw(ctx, w, h);
+      } else {
+        // Dark voxel-themed background during dialogue
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, '#0a0a2e'); grad.addColorStop(1, '#1a0040');
+        ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = 'rgba(120,80,200,0.08)';
+        for (let i = 0; i < 20; i++) {
+          const bx = (i * 80 + Date.now() * 0.01) % (w + 40) - 20;
+          const by = (i * 50) % h;
+          ctx.fillRect(bx, by, 20, 20);
+        }
+      }
       ctx.restore();
       return;
     }
@@ -15589,7 +16752,7 @@ if (!CanvasRenderingContext2D.prototype.roundRect) {
 
 // Handle touch for dialogue advancement
 document.addEventListener('touchstart', (e) => {
-  if (Game.state === 'dialogue') {
+  if (Game.state === 'dialogue' || Game.state === 'cubewild_dialogue') {
     Input.justPressed['Space'] = true;
   }
   if (Game.state === 'finale') {
