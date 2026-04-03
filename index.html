@@ -2292,7 +2292,7 @@ class Player extends Entity {
   hurt(dmg) {
     if (this.invincible > 0) return;
     this.hp -= dmg;
-    this.invincible = 60;
+    this.invincible = 50;
     this.hurtFlash = 20;
     this.vy = -6;
     Particles.emit(this.cx, this.cy, 10, { color: '#ff4444', size: 3 });
@@ -3492,7 +3492,7 @@ class Enemy extends Entity {
     this.type = type; // raccoon, rat, drone, searchlight, shadowwolf, ghostflame, darkserpent, phantomknight, voidbat
     this.patrol = patrol || 100;
     this.startX = x;
-    this.speed = type === 'rat' ? 1.5 : (type === 'shadowwolf' ? 2.0 : (type === 'ghostflame' ? 0.3 : (type === 'darkserpent' ? 1.2 : 1)));
+    this.speed = type === 'rat' ? 1.65 : (type === 'shadowwolf' ? 2.0 : (type === 'ghostflame' ? 0.3 : (type === 'darkserpent' ? 1.2 : 1.1)));
     this.dir = 1;
     this.animFrame = 0;
     this.animTimer = 0;
@@ -3505,7 +3505,7 @@ class Enemy extends Entity {
 
     if (this.type === 'searchlight') {
       // Searchlight sweeps
-      this.animTimer += 0.01;
+      this.animTimer += 0.012;
       return;
     }
 
@@ -6206,28 +6206,32 @@ const LevelData = {
       // Shadow Creature army - Level 12 is the hardest level
       const creatureTypes = ['shadowwolf', 'ghostflame', 'darkserpent', 'phantomknight', 'voidbat'];
       // Ground floor creatures — every 150px (challenging but beatable)
-      for (let x = 400; x < 8500; x += 150) {
+      for (let x = 300; x < 8500; x += 125) {
         const type = creatureTypes[Math.floor(Math.random() * creatureTypes.length)];
-        const patrol = type === 'ghostflame' ? 35 : 90 + Math.random() * 100;
+        const patrol = type === 'ghostflame' ? 28 : 72 + Math.random() * 80;
         enemies.push(new Enemy(x, 600, type, patrol));
       }
       // Train car rooftop creatures — on every 3rd train
       for (let i = 0; i < trainCars.length; i += 3) {
         const tc = trainCars[i];
-        enemies.push(new Enemy(tc.x + 60, tc.y - 28, 'shadowwolf', 80));
+        enemies.push(new Enemy(tc.x + 60, tc.y - 28, 'shadowwolf', 64));
       }
-      // Boss gauntlet near Sparky — 6 bosses
-      enemies.push(new Enemy(7500, 490, 'phantomknight', 55));
-      enemies.push(new Enemy(7650, 600, 'shadowwolf', 70));
-      enemies.push(new Enemy(7800, 490, 'voidbat', 60));
-      enemies.push(new Enemy(7950, 600, 'phantomknight', 55));
-      enemies.push(new Enemy(8000, 490, 'shadowwolf', 65));
-      enemies.push(new Enemy(8100, 600, 'darkserpent', 60));
+      // Boss gauntlet near Sparky — 8 bosses
+      enemies.push(new Enemy(7350, 600, 'voidbat', 50));
+      enemies.push(new Enemy(7500, 490, 'phantomknight', 44));
+      enemies.push(new Enemy(7650, 600, 'shadowwolf', 56));
+      enemies.push(new Enemy(7800, 490, 'voidbat', 48));
+      enemies.push(new Enemy(7950, 600, 'phantomknight', 44));
+      enemies.push(new Enemy(8000, 490, 'shadowwolf', 52));
+      enemies.push(new Enemy(8100, 600, 'darkserpent', 48));
+      enemies.push(new Enemy(8150, 490, 'voidbat', 45));
 
-      // 4 searchlights
+      // 6 searchlights
       enemies.push(new Enemy(1500, 500, 'searchlight', 0));
+      enemies.push(new Enemy(2500, 490, 'searchlight', 0));
       enemies.push(new Enemy(3500, 480, 'searchlight', 0));
       enemies.push(new Enemy(5500, 500, 'searchlight', 0));
+      enemies.push(new Enemy(6000, 490, 'searchlight', 0));
       enemies.push(new Enemy(7200, 480, 'searchlight', 0));
 
       // Fish everywhere
@@ -13561,7 +13565,7 @@ const CubewildTour = {
   blocks: [], inventory: { stone: 0, crystal: 0, wood: 0 },
   placedBlocks: [], enemies: [], animals: [], hazards: [],
   boss: null, zone: 0, particles: [],
-  completed: false, worldW: 18000,
+  completed: false, worldW: 25000,
   floorY: 0, ceilY: 0, walkFrame: 0,
   bossActive: false, zoneBanner: 0, zoneBannerName: '',
   lastZone: -1, iFrames: 0, respawnTimer: 0,
@@ -13569,11 +13573,11 @@ const CubewildTour = {
   blockBreakTimers: {}, // keyed by block index
 
   zones: [
-    { name: 'CRYSTAL CAVERN', start: 0, end: 3600 },
-    { name: 'LAVA MINES', start: 3600, end: 7200 },
-    { name: 'FLOODED TUNNELS', start: 7200, end: 10800 },
-    { name: 'ASH WASTES', start: 10800, end: 14400 },
-    { name: 'SKY FRACTURE', start: 14400, end: 18000 }
+    { name: 'CRYSTAL CAVERN', start: 0, end: 5000 },
+    { name: 'LAVA MINES', start: 5000, end: 10000 },
+    { name: 'FLOODED TUNNELS', start: 10000, end: 15000 },
+    { name: 'ASH WASTES', start: 15000, end: 20000 },
+    { name: 'SKY FRACTURE', start: 20000, end: 25000 }
   ],
 
   getZone() {
@@ -13597,6 +13601,7 @@ const CubewildTour = {
     this.inventory = { stone: 5, crystal: 0, wood: 3 };
     this.placedBlocks = []; this.particles = [];
     this.projectiles = [];
+    this.enemyProjectiles = [];
     this.buildMode = false; // toggle with B key
     this.buildCursor = { x: 0, y: 0 };
     this.blockBreakTimers = {};
@@ -13604,7 +13609,7 @@ const CubewildTour = {
     // Generate blocks
     this.blocks = [];
     for (let x = 200; x < this.worldW - 500; x += 60 + Math.random() * 120) {
-      const z = Math.floor(x / 3600);
+      const z = Math.floor(x / 5000);
       let type = 'stone';
       const r = Math.random();
       if (r < 0.15) type = 'crystal';
@@ -13618,9 +13623,9 @@ const CubewildTour = {
     // Generate enemies
     this.enemies = [];
     for (let x = 400; x < this.worldW - 1000; x += 200 + Math.random() * 280) {
-      const z = Math.floor(x / 3600);
+      const z = Math.floor(x / 5000);
       // Skip boss zones
-      if ((x > 6600 && x < 7000) || (x > 13800 && x < 14200) || (x > 17000 && x < 17600)) continue;
+      if ((x > 9300 && x < 9700) || (x > 19300 && x < 19700) || (x > 23800 && x < 24200)) continue;
       let type;
       if (z === 0) type = 'crawler';
       else if (z === 1) type = 'burrower';
@@ -13630,12 +13635,19 @@ const CubewildTour = {
       const ey = this.ceilY + 40 + Math.random() * (this.floorY - this.ceilY - 80);
       this.enemies.push({ x, y: ey, type, alive: true, hp: type === 'stomper' ? 4 : 1, baseY: ey, phase: Math.random() * Math.PI * 2, speed: type === 'sprinter' ? 3.1 : type === 'stomper' ? 1.0 : 1.9 });
     }
+    // Extra enemies in later zones for increased challenge
+    for (let x = 15000; x < this.worldW - 1000; x += 150 + Math.random() * 200) {
+      if ((x > 19300 && x < 19700) || (x > 23800 && x < 24200)) continue; // skip boss zones
+      const type = ['crawler','burrower','sprinter','raider','stomper'][randInt(0,4)];
+      const ey = this.ceilY + 40 + Math.random() * (this.floorY - this.ceilY - 80);
+      this.enemies.push({ x, y: ey, type, alive: true, hp: type === 'stomper' ? 4 : 2, baseY: ey, phase: Math.random() * Math.PI * 2, speed: type === 'sprinter' ? 3.5 : type === 'stomper' ? 1.2 : 2.2 });
+    }
 
     // Generate animals
     this.animals = [];
     const animalTypes = ['chicken','duck','fish','frog','bunny'];
     for (let x = 300; x < this.worldW - 600; x += 350 + Math.random() * 400) {
-      const z = Math.floor(x / 3600);
+      const z = Math.floor(x / 5000);
       let aType;
       if (z <= 1) aType = Math.random() < 0.5 ? 'chicken' : 'duck';
       else if (z === 2) aType = Math.random() < 0.5 ? 'fish' : 'frog';
@@ -13646,16 +13658,16 @@ const CubewildTour = {
 
     // Generate hazards
     this.hazards = [];
-    // Lava pits in zone 1-2
-    for (let x = 3800; x < 7000; x += 150 + Math.random() * 230) {
+    // Lava pits in zone 2
+    for (let x = 5200; x < 9500; x += 150 + Math.random() * 230) {
       if (Math.random() < 0.5) this.hazards.push({ x, y: this.floorY - 15, w: 70 + Math.random() * 50, h: 15, type: 'lava' });
     }
-    // Water currents in zone 2-3
-    for (let x = 7400; x < 10600; x += 190 + Math.random() * 230) {
+    // Water currents in zone 3
+    for (let x = 10200; x < 14800; x += 190 + Math.random() * 230) {
       if (Math.random() < 0.45) this.hazards.push({ x, y: this.ceilY + Math.random() * (this.floorY - this.ceilY - 60), w: 55, h: 55, type: 'water' });
     }
-    // Falling rocks in zone 3-5 (extended range)
-    for (let x = 10500; x < 17000; x += 140 + Math.random() * 200) {
+    // Falling rocks in zones 4-5
+    for (let x = 15200; x < 24000; x += 140 + Math.random() * 200) {
       if (Math.random() < 0.4) this.hazards.push({ x, y: this.ceilY, w: 22, h: 22, type: 'rock', vy: 0, falling: false, fallTimer: Math.random() * 160 });
     }
   },
@@ -13671,6 +13683,7 @@ const CubewildTour = {
       this.boss = { type, hp: 25, maxHp: 25, x: this.playerX + 200, y: cy, phase: 0, timer: 0, attackTimer: 0, weakPoint: false, weakTimer: 0, hitFlash: 0, bodySegs: 5 };
     }
     this.bossActive = true;
+    this.enemyProjectiles = [];
   },
 
   hurtPlayer() {
@@ -13718,9 +13731,9 @@ const CubewildTour = {
 
     // Boss spawning
     if (!this.bossActive && !this.boss) {
-      if (this.scrollX >= 6600 && this.scrollX < 6900 && this.bossesDefeated === 0) this.spawnBoss('deepwatcher', 6800);
-      else if (this.scrollX >= 13800 && this.scrollX < 14100 && this.bossesDefeated === 1) this.spawnBoss('ashtitan', 14000);
-      else if (this.scrollX >= 17000 && this.scrollX < 17300 && this.bossesDefeated === 2) this.spawnBoss('voiddrake', 17200);
+      if (this.scrollX >= 9300 && this.scrollX < 9600 && this.bossesDefeated === 0) this.spawnBoss('deepwatcher', 9500);
+      else if (this.scrollX >= 19300 && this.scrollX < 19600 && this.bossesDefeated === 1) this.spawnBoss('ashtitan', 19500);
+      else if (this.scrollX >= 23800 && this.scrollX < 24100 && this.bossesDefeated === 2) this.spawnBoss('voiddrake', 24000);
     }
 
     // Auto-scroll (stop during boss)
@@ -13879,6 +13892,21 @@ const CubewildTour = {
       e.phase += 0.03;
       e.y = e.baseY + Math.sin(e.phase) * 30;
       if (e.type === 'sprinter') e.x -= e.speed * 0.3;
+      // Enemy shoots at player periodically
+      if (!e.shootTimer) e.shootTimer = 60 + Math.floor(Math.random() * 120);
+      e.shootTimer--;
+      if (e.shootTimer <= 0 && Math.abs(sx) < w * 0.8) {
+        e.shootTimer = 90 + Math.floor(Math.random() * 90);
+        // Fire projectile toward player
+        const angle = Math.atan2(this.playerY - e.y, playerWorldX - e.x);
+        this.enemyProjectiles.push({
+          x: e.x, y: e.y,
+          vx: Math.cos(angle) * 3,
+          vy: Math.sin(angle) * 2.5,
+          life: 120, size: 5,
+          color: e.type === 'burrower' ? '#ff6d00' : e.type === 'sprinter' ? '#00bcd4' : '#e040fb'
+        });
+      }
       // Collision
       const dx = playerWorldX - e.x;
       const dy = this.playerY - e.y;
@@ -13887,6 +13915,24 @@ const CubewildTour = {
         this.hurtPlayer();
       }
     }
+
+    // Update enemy projectiles
+    for (let i = this.enemyProjectiles.length - 1; i >= 0; i--) {
+      const ep = this.enemyProjectiles[i];
+      ep.x += ep.vx;
+      ep.y += ep.vy;
+      ep.life--;
+      if (ep.life <= 0) { this.enemyProjectiles.splice(i, 1); continue; }
+      // Hit player
+      const dx = playerWorldX - ep.x;
+      const dy = this.playerY - ep.y;
+      if (Math.abs(dx) < 18 && Math.abs(dy) < 18) {
+        this.hurtPlayer();
+        this.enemyProjectiles.splice(i, 1);
+      }
+    }
+    // Cap enemy projectiles
+    if (this.enemyProjectiles.length > 30) this.enemyProjectiles.splice(0, this.enemyProjectiles.length - 30);
 
     // Hazard collision
     for (const hz of this.hazards) {
@@ -14064,6 +14110,26 @@ const CubewildTour = {
       if (drawnEnemies >= 15) break;
       drawnEnemies++;
       this.drawEnemy(ctx, sx, e.y, e.type, t);
+    }
+
+    // === ENEMY PROJECTILES ===
+    for (const ep of this.enemyProjectiles) {
+      const epx = ep.x - this.scrollX;
+      const epy = ep.y;
+      if (epx < -20 || epx > w + 20) continue;
+      ctx.save();
+      ctx.globalAlpha = Math.min(1, ep.life / 30);
+      ctx.fillStyle = ep.color;
+      ctx.beginPath();
+      ctx.arc(epx, epy, ep.size, 0, Math.PI * 2);
+      ctx.fill();
+      // Glow
+      ctx.globalAlpha *= 0.3;
+      ctx.beginPath();
+      ctx.arc(epx, epy, ep.size * 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.restore();
     }
 
     // === BOSS ===
