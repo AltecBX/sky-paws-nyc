@@ -13584,7 +13584,7 @@ const CubewildTour = {
   },
 
   init(w, h) {
-    this.scrollX = 0; this.scrollSpeed = 1.8;
+    this.scrollX = 0; this.scrollSpeed = 2.25;
     this.playerX = w * 0.25; this.playerY = h * 0.5;
     this.playerVY = 0; this.health = 5; this.maxHealth = 5;
     this.floorY = h * 0.85; this.ceilY = h * 0.08;
@@ -13617,7 +13617,7 @@ const CubewildTour = {
 
     // Generate enemies
     this.enemies = [];
-    for (let x = 400; x < this.worldW - 1000; x += 250 + Math.random() * 350) {
+    for (let x = 400; x < this.worldW - 1000; x += 200 + Math.random() * 280) {
       const z = Math.floor(x / 3600);
       // Skip boss zones
       if ((x > 6600 && x < 7000) || (x > 13800 && x < 14200) || (x > 17000 && x < 17600)) continue;
@@ -13628,7 +13628,7 @@ const CubewildTour = {
       else if (z === 3) type = Math.random() < 0.5 ? 'raider' : 'stomper';
       else type = ['crawler','burrower','sprinter','raider','stomper'][randInt(0,4)];
       const ey = this.ceilY + 40 + Math.random() * (this.floorY - this.ceilY - 80);
-      this.enemies.push({ x, y: ey, type, alive: true, hp: type === 'stomper' ? 3 : 1, baseY: ey, phase: Math.random() * Math.PI * 2, speed: type === 'sprinter' ? 2.5 : type === 'stomper' ? 0.8 : 1.5 });
+      this.enemies.push({ x, y: ey, type, alive: true, hp: type === 'stomper' ? 4 : 1, baseY: ey, phase: Math.random() * Math.PI * 2, speed: type === 'sprinter' ? 3.1 : type === 'stomper' ? 1.0 : 1.9 });
     }
 
     // Generate animals
@@ -13647,16 +13647,16 @@ const CubewildTour = {
     // Generate hazards
     this.hazards = [];
     // Lava pits in zone 1-2
-    for (let x = 3800; x < 7000; x += 200 + Math.random() * 300) {
-      if (Math.random() < 0.4) this.hazards.push({ x, y: this.floorY - 15, w: 60 + Math.random() * 40, h: 15, type: 'lava' });
+    for (let x = 3800; x < 7000; x += 150 + Math.random() * 230) {
+      if (Math.random() < 0.5) this.hazards.push({ x, y: this.floorY - 15, w: 70 + Math.random() * 50, h: 15, type: 'lava' });
     }
     // Water currents in zone 2-3
-    for (let x = 7400; x < 10600; x += 250 + Math.random() * 300) {
-      if (Math.random() < 0.35) this.hazards.push({ x, y: this.ceilY + Math.random() * (this.floorY - this.ceilY - 60), w: 50, h: 50, type: 'water' });
+    for (let x = 7400; x < 10600; x += 190 + Math.random() * 230) {
+      if (Math.random() < 0.45) this.hazards.push({ x, y: this.ceilY + Math.random() * (this.floorY - this.ceilY - 60), w: 55, h: 55, type: 'water' });
     }
-    // Falling rocks in zone 3-4
-    for (let x = 11000; x < 14200; x += 180 + Math.random() * 250) {
-      if (Math.random() < 0.3) this.hazards.push({ x, y: this.ceilY, w: 20, h: 20, type: 'rock', vy: 0, falling: false, fallTimer: Math.random() * 200 });
+    // Falling rocks in zone 3-5 (extended range)
+    for (let x = 10500; x < 17000; x += 140 + Math.random() * 200) {
+      if (Math.random() < 0.4) this.hazards.push({ x, y: this.ceilY, w: 22, h: 22, type: 'rock', vy: 0, falling: false, fallTimer: Math.random() * 160 });
     }
   },
 
@@ -13664,11 +13664,11 @@ const CubewildTour = {
     const h = this.floorY - this.ceilY;
     const cy = this.ceilY + h * 0.4;
     if (type === 'deepwatcher') {
-      this.boss = { type, hp: 12, maxHp: 12, x: this.playerX + 180, y: cy, phase: 0, timer: 0, attackTimer: 0, weakPoint: false, weakTimer: 0, hitFlash: 0 };
+      this.boss = { type, hp: 15, maxHp: 15, x: this.playerX + 180, y: cy, phase: 0, timer: 0, attackTimer: 0, weakPoint: false, weakTimer: 0, hitFlash: 0 };
     } else if (type === 'ashtitan') {
-      this.boss = { type, hp: 16, maxHp: 16, x: this.playerX + 180, y: cy, phase: 0, timer: 0, attackTimer: 0, weakPoint: false, weakTimer: 0, hitFlash: 0, skulls: [{a:0},{a:2.09},{a:4.19}] };
+      this.boss = { type, hp: 20, maxHp: 20, x: this.playerX + 180, y: cy, phase: 0, timer: 0, attackTimer: 0, weakPoint: false, weakTimer: 0, hitFlash: 0, skulls: [{a:0},{a:2.09},{a:4.19}] };
     } else if (type === 'voiddrake') {
-      this.boss = { type, hp: 20, maxHp: 20, x: this.playerX + 200, y: cy, phase: 0, timer: 0, attackTimer: 0, weakPoint: false, weakTimer: 0, hitFlash: 0, bodySegs: 5 };
+      this.boss = { type, hp: 25, maxHp: 25, x: this.playerX + 200, y: cy, phase: 0, timer: 0, attackTimer: 0, weakPoint: false, weakTimer: 0, hitFlash: 0, bodySegs: 5 };
     }
     this.bossActive = true;
   },
