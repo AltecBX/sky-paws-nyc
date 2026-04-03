@@ -13740,8 +13740,9 @@ const CubewildTour = {
 
     const playerWorldX = this.scrollX + this.playerX;
 
-    // === SHOOTING (M key) ===
-    if (Input.justPressed['KeyM']) {
+    // === SHOOTING (M key, or Space/Action when not in build mode) ===
+    const shootPressed = Input.justPressed['KeyM'] || (!this.buildMode && Input.action());
+    if (shootPressed) {
       this.projectiles.push({
         x: playerWorldX + 20, y: this.playerY,
         vx: 7, vy: 0, life: 90, size: 6,
@@ -13822,13 +13823,6 @@ const CubewildTour = {
         this.placedBlocks.push({ x: this.buildCursor.x, y: this.buildCursor.y, size: 22, type: 'wood' });
         Audio.play('collect');
         this.addParticles(this.buildCursor.x - this.scrollX, this.buildCursor.y, 4, '#5d4037');
-      }
-    } else {
-      // Normal mode: Space places block in front of player (quick build)
-      if (Input.action() && this.inventory.stone > 0) {
-        this.inventory.stone--;
-        this.placedBlocks.push({ x: playerWorldX + 30, y: this.playerY, size: 22 });
-        Audio.play('collect');
       }
     }
 
@@ -14781,7 +14775,7 @@ const CubewildTour = {
       ctx.fillStyle = 'rgba(255,255,255,0.7)';
       ctx.font = '10px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('↑↓ Move   M Shoot   B Build Mode   Space Place Block', w / 2, h - 32);
+      ctx.fillText('↑↓ Move   Space/M Shoot   B Build Mode', w / 2, h - 32);
       ctx.textAlign = 'left';
     }
 
